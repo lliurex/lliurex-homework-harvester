@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Lliurex-homework-harvester
+Comment=Lliurex homework harvester
+Comment[es]=Recolector de trabajos de Lliurex
+Comment[ca_ES]=Recol·lector de treballs del Lliurex
+Comment[ca_ES@valencia]=Recol·lector de treballs del Lliurex
+Exec=lliurex-homework-harvester
+Icon=lliurex-homework-harvester
+Terminal=false
+Type=Application
+NoDisplay=True
+Categories=System

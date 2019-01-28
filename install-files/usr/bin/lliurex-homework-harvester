@@ -1,0 +1,191 @@
+#!/usr/bin/env python
+# coding = utf-8
+
+import os.path
+import imp
+import gtk
+import gtk.glade
+import sys
+import getpass
+import locale
+import gettext
+
+from xmlrpclib import *
+
+locale.textdomain("lliurex-homework-harvester")
+gettext.textdomain("lliurex-homework-harvester")
+_=locale.gettext
+
+TEACHER_SIDE="TeacherSide.glade"
+
+class TeacherSide:
+	
+	def __init__(self,user,path):
+		
+		self.user=user
+		self.path=path
+		
+		self.server=ServerProxy("https://server:9779")
+		
+		if self.path[len(self.path)-1]!="/":
+			self.path+="/"
+		
+		tmp=self.path.split("/")
+		self.name=tmp[len(tmp)-2]
+		
+		self.ip=self.get_my_ip()
+		self.read_glade()
+		
+	#def __init__
+	
+	def read_glade(self):
+		
+		if os.path.exists("./rsrc/" + TEACHER_SIDE):
+			path="./rsrc/" + TEACHER_SIDE
+		else:
+			path="/usr/share/lliurex-homework-harvester/rsrc/" + TEACHER_SIDE
+			
+		glade=gtk.glade.XML(path)
+		self.window=glade.get_widget("window")
+		self.window.connect("destroy",gtk.main_quit)
+		self.apply_button=glade.get_widget("applyButton")
+		self.apply_button.connect("clicked",self.apply_clicked)
+		self.exit_button=glade.get_widget("exitButton")
+		self.exit_button.connect("clicked",self.exit_clicked)
+		self.remove_button=glade.get_widget("removeButton")
+		self.remove_button.connect("clicked",self.remove_clicked)
+		self.folder_entry=glade.get_widget("folderEntry")
+		self.name_entry=glade.get_widget("nameEntry")
+		self.name_entry.set_text(self.name)
+		self.user_entry=glade.get_widget("userEntry")
+		self.password_entry=glade.get_widget("passwordEntry")
+		self.password_entry.connect("activate",self.detect_enter)
+		self.msg_label=glade.get_widget("msgLabel")
+		
+		self.user_entry.set_text(self.user)
+		self.user_entry.set_sensitive(False)
+		self.folder_entry.set_text(self.path)
+		self.folder_entry.set_sensitive(False)
+		
+		self.window.show_all()
+		
+		try:
+			ret=self.server.is_configured("","TeacherShareManager",self.user,self.path)
+			print ret
+		
+			if type(ret)==type(True):
+				if ret:
+					self.apply_button.hide()
+					self.name_entry.set_sensitive(False)
+					self.msg_label.set_text(_("This folder is already configured to receive homeworks."))
+					path,name,ip,port=self.server.get_paths("","TeacherShareManager")[self.user]
+					self.name_entry.set_text(name)
+				else:
+					self.remove_button.hide()
+		except Exception as e:
+			
+			print e
+			self.msg_label.set_text(_("Error connecting to server"))
+			self.apply_button.hide()
+			self.remove_button.hide()
+			self.password_entry.set_sensitive(False)
+			self.name_entry.set_sensitive(False)
+		
+		
+	#def read_glade
+	
+	def exit_clicked(self,widget):
+		
+		gtk.main_quit()
+		
+	#def exit_clicked
+	
+	def apply_clicked(self,widget):
+		
+		ret=self.register_path()
+		if type(ret)==type(True):
+			if ret:
+				self.msg_label.set_text(_("Folder is ready to receive homeworks. You may close the window"))
+				self.apply_button.hide()
+				self.name_entry.set_sensitive(False)
+				self.remove_button.show()
+		else:
+			self.msg_label.set_text(ret)
+			
+		
+	#def apply_clicked
+	
+	def remove_clicked(self,widget):
+		
+		user_info=(self.user,self.password_entry.get_text())
+		ret=self.server.remove_path(user_info,"TeacherShareManager",self.user)
+		
+		
+		self.msg_label.set_text(_("Folder has been removed from the service."))
+		self.remove_button.hide()
+		self.apply_button.show()
+		self.name_entry.set_sensitive(True)
+		
+		
+	#def remove_clicked
+	
+	
+	def get_my_ip(self):
+		'''
+		user_list=self.discover.discover()
+		print user_list
+		for user in user_list:
+			if user==self.user:
+				if user_list[user]!=None:
+					if ":" in user_list[user]:
+						return "server"
+					else:
+						return user_list[user]
+				else:
+					return "server"
+		'''
+
+		try:
+			client=ServerProxy("https://localhost:9779",allow_none=True)
+			eth=client.get_variable("","VariablesManager","CLIENT_INTERNAL_INTERFACE")
+			if eth==None:
+				eth=client.get_variable("","VariablesManager","INTERNAL_INTERFACE")
+				
+			return client.get_ip(eth)
+			
+			
+		except:
+			return None
+					
+	#def get_my_ip
+
+
+	def detect_enter(self,widget):
+		self.apply_clicked(None)
+
+	def register_path(self):
+		
+		if self.ip!=None:
+			user_info=(self.user,self.password_entry.get_text())
+			tmp_server=ServerProxy("https://"+self.ip+":9779")
+			#port=tmp_server.request_socket(user_info,"SocketManager",self.user,True,self.path)
+			#tmp_server.start_socket(user_info,"SocketManager",port)
+			ret=self.server.add_path(user_info,"TeacherShareManager",self.user,self.path,self.name_entry.get_text(),self.ip,0)
+			#Register user credentials 
+			if ret:
+				tmp_server.register_share_info(user_info,"TeacherShare",user_info[0],user_info[1],self.path)
+			return ret
+		else:
+			return _("Error getting IP")
+		
+		
+	#def register_path
+
+
+#class TeacherSide
+
+
+if __name__=="__main__":
+	
+	ts=TeacherSide(getpass.getuser(),sys.argv[1])
+	gtk.main()

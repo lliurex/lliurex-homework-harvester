@@ -1,0 +1,130 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-06-27 12:37+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: 1.py:88
+msgid "This folder is already configured to receive homeworks."
+msgstr "Esta carpeta ya está configurada para recibir trabajos."
+
+#: 1.py:96
+msgid "Error connecting to server"
+msgstr "Error conectando al servidor"
+
+#: 1.py:116
+msgid "Folder is ready to receive homeworks. You may close the window"
+msgstr "La carpeta está lista para recibir trabajos. Puede cerrar la ventana"
+
+#: 1.py:132
+msgid "Folder has been removed from the service."
+msgstr "La carpeta ha sido retirada del servicio."
+
+#: 1.py:174
+msgid "Error getting IP"
+msgstr "Error obteniendo IP"
+
+#: 2.py:95
+msgid "Files have been sent to "
+msgstr "Los ficheros han sido enviados a "
+
+#: 2.py:111
+msgid "File"
+msgstr "Fichero"
+
+#: 2.py:124
+msgid "Where"
+msgstr "Donde"
+
+#: 2.py:125
+msgid "Teacher"
+msgstr "Profesor"
+
+#: 2.py:200
+msgid "Open..."
+msgstr "Abrir..."
+
+#: 2.py:251
+msgid "Please, select a destination first."
+msgstr "Por favor, seleccione primero un destino."
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/lib/nautilus/extensions-2.0/python/lliurex-homework-harverster-extension.py:100
+msgid "Set this folder to receive homeworks..."
+msgstr "Marque esta carpeta para recibir trabajos..."
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/lib/nautilus/extensions-2.0/python/lliurex-homework-harverster-extension.py:101
+msgid "Set this folder to receive homeworks"
+msgstr "Marque esta carpeta para recibir trabajos"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/lib/nautilus/extensions-2.0/python/lliurex-homework-harverster-extension.py:118
+msgid "Send file to teacher..."
+msgstr "Envie fichero a profesor..."
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/lib/nautilus/extensions-2.0/python/lliurex-homework-harverster-extension.py:119
+msgid "Send file to teacher"
+msgstr "Envie fichero a profesor"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:6
+msgid "Lliurex Homework Sender"
+msgstr "Lliurex Homework Sender"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:34
+msgid "Files to send:"
+msgstr "Ficheros a enviar:"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:96
+msgid "Add file"
+msgstr "Añadir fichero"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:131
+msgid "Remove file"
+msgstr "Retire fichero"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:170
+msgid "Select teacher:"
+msgstr "Seleccione profesor:"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:313
+msgid "<b>Send files to teacher...</b>"
+msgstr "<b>Envie fichero a profesor...</b>"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:7
+msgid "Lliurex Homework Harvester"
+msgstr "Lliurex Homework Harvester"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:57
+msgid "Folder"
+msgstr "Carpeta"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:111
+msgid "Name"
+msgstr "Nombre"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:165
+msgid "User"
+msgstr "Usuario"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:222
+msgid "Password"
+msgstr "Contraseña"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:270
+msgid "Enter your password and press Apply"
+msgstr "Introduzca su password y presione Aplicar"
+
+#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:302
+msgid "<b>Lliurex Homework Harvester</b>"
+msgstr "<b>Lliurex Homework Harvester</b>"
