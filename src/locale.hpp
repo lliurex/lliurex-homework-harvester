@@ -17,32 +17,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HARVESTER_TEACHER_PLUGIN
-#define HARVESTER_TEACHER_PLUGIN
+#ifndef HARVESTER_LOCALE
+#define HARVESTER_LOCALE
 
-#include <KAbstractFileItemActionPlugin>
-#include <KFileItemListProperties>
-#include <KPluginFactory>
-#include <QAction>
+#include <libintl.h>
+#include <locale.h>
+#include <QString>
 
-class HarvesterTeacherPlugin : public KAbstractFileItemActionPlugin
+static QString T(const char* s)
 {
-    Q_OBJECT
-    
-    private:
-        
-    QAction* actionReceive;
-    
-    private slots:
-    
-    void triggered(bool checked = false);
-    
-    public:
-    HarvesterTeacherPlugin(QObject* parent, const QVariantList& list);
-    ~HarvesterTeacherPlugin();
-    
-    QList<QAction * > actions (const KFileItemListProperties& fileItemInfos, QWidget* parentWidget) override;
- 
-};
+    return QString::fromUtf8(gettext(s));
+}
 
 #endif

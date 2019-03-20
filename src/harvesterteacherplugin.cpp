@@ -18,6 +18,7 @@
 */
 
 #include "harvesterteacherplugin.hpp"
+#include "locale.hpp"
  
 #include <grp.h>
 #include <pwd.h>
@@ -25,12 +26,18 @@
 #include <sys/types.h>
  
 #include <iostream>
+#include <vector>
+#include <string>
 
 using namespace std;
 
-HarvesterTeacherPlugin::HarvesterTeacherPlugin(QObject* parent, const QVariantList& list) : KAbstractFileItemActionPlugin(parent)
+/*
+    Returns a list of group names that current user belongs to
+    In case of error it just returns an empty list
+*/
+vector<string> getUserGroups()
 {
-    clog<<"plugin created"<<endl;
+    vector<string> ret;
     
     /* get current user id */
     uid_t user=getuid();
@@ -40,40 +47,62 @@ HarvesterTeacherPlugin::HarvesterTeacherPlugin(QObject* parent, const QVariantLi
     int ngroups=32;
     
     if (pass==nullptr) {
-        cerr<<"Error retrieving user info"<<endl;
+        return ret;
     }
     else {
-        
         int status=getgrouplist(pass->pw_name,pass->pw_gid,groups,&ngroups);
         
         if (status==-1) {
-            
+            return ret;
         }
         else {
             for (int n=0;n<ngroups;n++) {
                 struct group* grp=getgrgid(groups[n]);
                 if (grp!=nullptr) {
-                    clog<<"* "<<grp->gr_name<<endl;
+                    ret.push_back(string(grp->gr_name));
                 }
             }
         }
-        
     }
     
+    return ret;
+}
+
+HarvesterTeacherPlugin::HarvesterTeacherPlugin(QObject* parent, const QVariantList& list) : KAbstractFileItemActionPlugin(parent)
+{
     actionReceive=new QAction(this);
-    actionReceive->setText("Receive homework here");
+    actionReceive->setText(T("Receive homework here"));
+    
+    connect(actionReceive,&QAction::triggered,this,&HarvesterTeacherPlugin::triggered);
 }
 
 HarvesterTeacherPlugin::~HarvesterTeacherPlugin()
 {
-    clog<<"plugin destroyed!"<<endl;
+}
+
+void HarvesterTeacherPlugin::triggered(bool checked)
+{
+    clog<<"Triggered "<<checked<<endl;
 }
 
 QList<QAction* > HarvesterTeacherPlugin::actions(const KFileItemListProperties& fileItemInfos, QWidget* parentWidget)
 {
     QList<QAction*> list;
     
-    list.append(actionReceive);
+    vector<string> groups = getUserGroups();
+    
+    bool isTeacher=false;
+    
+    for (string group : groups) {
+        if (group=="teachers") {
+            isTeacher=true;
+            break;
+        }
+    }
+    
+    if (isTeacher and fileItemInfos.isDirectory() and fileItemInfos.supportsWriting()) {
+        list.append(actionReceive);
+    }
     
     return list;
 }
