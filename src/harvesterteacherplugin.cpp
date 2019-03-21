@@ -19,6 +19,10 @@
 
 #include "harvesterteacherplugin.hpp"
 #include "locale.hpp"
+
+#include <KFileItem>
+#include <QString>
+#include <QProcess>
  
 #include <grp.h>
 #include <pwd.h>
@@ -30,6 +34,7 @@
 #include <string>
 
 using namespace std;
+using namespace lliurex::locale;
 
 /*
     Returns a list of group names that current user belongs to
@@ -70,6 +75,8 @@ vector<string> getUserGroups()
 
 HarvesterTeacherPlugin::HarvesterTeacherPlugin(QObject* parent, const QVariantList& list) : KAbstractFileItemActionPlugin(parent)
 {
+    lliurex::locale::domain("lliurex-homework-harvester-plugin");
+    
     actionReceive=new QAction(this);
     actionReceive->setText(T("Receive homework here"));
     
@@ -82,19 +89,33 @@ HarvesterTeacherPlugin::~HarvesterTeacherPlugin()
 
 void HarvesterTeacherPlugin::triggered(bool checked)
 {
-    clog<<"Triggered "<<checked<<endl;
+    //clog<<"Triggered "<<checked<<endl;
+    QProcess child;
+    
+    child.setProgram("/usr/bin/lliurex-homework-harvester");
+    child.setArguments({target.toLocalFile()});
+    child.start();
+    child.waitForFinished();
+    
 }
 
 QList<QAction* > HarvesterTeacherPlugin::actions(const KFileItemListProperties& fileItemInfos, QWidget* parentWidget)
 {
     QList<QAction*> list;
     
+    KFileItemList files = fileItemInfos.items();
+    
+    /* we are not interested in multiple selections */
+    if (files.size()>1) {
+        return list;
+    }
+    
     vector<string> groups = getUserGroups();
     
     bool isTeacher=false;
     
     for (string group : groups) {
-        if (group=="teachers") {
+        if (group=="sudo") {
             isTeacher=true;
             break;
         }
@@ -102,6 +123,10 @@ QList<QAction* > HarvesterTeacherPlugin::actions(const KFileItemListProperties& 
     
     if (isTeacher and fileItemInfos.isDirectory() and fileItemInfos.supportsWriting()) {
         list.append(actionReceive);
+        
+        //KFileItem target = files.first();
+        target = files.first().url();
+        //clog<<"url: "<<target.url().toLocalFile().toLocal8Bit().data()<<endl;
     }
     
     return list;

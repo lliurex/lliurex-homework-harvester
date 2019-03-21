@@ -24,9 +24,20 @@
 #include <locale.h>
 #include <QString>
 
-static QString T(const char* s)
+namespace lliurex
 {
-    return QString::fromUtf8(gettext(s));
+    namespace locale
+    {
+        static void domain(const char* d)
+        {
+            textdomain(d);
+        }
+        
+        static QString T(const char* s)
+        {
+            return QString::fromUtf8(gettext(s));
+        }
+    }
 }
 
 #endif

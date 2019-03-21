@@ -30,7 +30,8 @@ class HarvesterTeacherPlugin : public KAbstractFileItemActionPlugin
     Q_OBJECT
     
     private:
-        
+    
+    QUrl target;
     QAction* actionReceive;
     
     private slots:
