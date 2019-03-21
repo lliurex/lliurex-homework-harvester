@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "harvesterteacherplugin.hpp"
+#include "harvesterstudentplugin.hpp"
 #include "locale.hpp"
 #include "util.hpp"
 
@@ -30,24 +30,28 @@
 using namespace std;
 using namespace lliurex::locale;
 
-HarvesterTeacherPlugin::HarvesterTeacherPlugin(QObject* parent, const QVariantList& list) : KAbstractFileItemActionPlugin(parent)
+
+
+HarvesterStudentPlugin::HarvesterStudentPlugin(QObject* parent, const QVariantList& list) : KAbstractFileItemActionPlugin(parent)
 {
     lliurex::locale::domain("lliurex-homework-harvester-plugin");
     
-    actionReceive=new QAction(this);
-    actionReceive->setText(T("Receive homework here"));
+    actionSend=new QAction(this);
+    actionSend->setText(T("Send homework"));
     
-    connect(actionReceive,&QAction::triggered,this,&HarvesterTeacherPlugin::triggered);
+    connect(actionSend,&QAction::triggered,this,&HarvesterStudentPlugin::triggered);
 }
 
-HarvesterTeacherPlugin::~HarvesterTeacherPlugin()
+HarvesterStudentPlugin::~HarvesterStudentPlugin()
 {
 }
 
-void HarvesterTeacherPlugin::triggered(bool checked)
+void HarvesterStudentPlugin::triggered(bool checked)
 {
-    clog<<"teacher plugin"<<endl;
-    clog<<"url: "<<target.toLocalFile().toLocal8Bit().data()<<endl;
+    clog<<"student plugin"<<endl;
+    for (auto t:target) {
+        clog<<"file: "<<t.toLocalFile().toLocal8Bit().data()<<endl;
+    }
     /*
     QProcess child;
     
@@ -58,36 +62,41 @@ void HarvesterTeacherPlugin::triggered(bool checked)
     */
 }
 
-QList<QAction* > HarvesterTeacherPlugin::actions(const KFileItemListProperties& fileItemInfos, QWidget* parentWidget)
+QList<QAction* > HarvesterStudentPlugin::actions(const KFileItemListProperties& fileItemInfos, QWidget* parentWidget)
 {
     QList<QAction*> list;
     
-    KFileItemList files = fileItemInfos.items();
-    
-    /* we are not interested in multiple selections */
-    if (files.size()>1) {
-        return list;
-    }
-    
     vector<string> groups = getUserGroups();
     
-    bool isTeacher=false;
+    bool isStudent=false;
     
     for (string group : groups) {
         if (group=="sudo") {
-            isTeacher=true;
+            isStudent=true;
             break;
         }
     }
     
-    if (isTeacher and fileItemInfos.isDirectory() and fileItemInfos.supportsWriting()) {
-        list.append(actionReceive);
-
-        target = files.first().url();
+    if (isStudent) {
+        clog<<"Im a student"<<endl;
+        KFileItemList files = fileItemInfos.items();
+        target.clear();
+        
+        list.append(actionSend);
+        
+        for (int n=0;n<files.size();n++) {
+            clog<<"pushing..."<<endl;
+            KFileItem& item = files[n];
+            
+            if  (item.isFile()) {
+                target.push_back(item.url());
+            }
+        }
+    
     }
     
     return list;
 }
 
-K_PLUGIN_FACTORY_WITH_JSON(HarvesterTeacherPluginFactory, "harvesterteacherplugin.json", registerPlugin<HarvesterTeacherPlugin>();)
-#include <harvesterteacherplugin.moc>
+K_PLUGIN_FACTORY_WITH_JSON(HarvesterStudentPluginFactory, "harvesterstudentplugin.json", registerPlugin<HarvesterStudentPlugin>();)
+#include <harvesterstudentplugin.moc>
