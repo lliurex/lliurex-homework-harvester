@@ -11,7 +11,7 @@ kcoreaddons_desktop_to_json(harvesterteacherplugin harvesterteacherplugin.deskto
 
 target_link_libraries(harvesterteacherplugin KF5::KIOWidgets)
 
-
+message(WARNING  ${KDE_INSTALL_PLUGINDIR})
 kcoreaddons_add_plugin(harvesterstudentplugin SOURCES harvesterstudentplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
 kcoreaddons_desktop_to_json(harvesterstudentplugin harvesterstudentplugin.desktop) # generate the json file
 

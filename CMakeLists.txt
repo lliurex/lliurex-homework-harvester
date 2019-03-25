@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
+project(lliurex-homework-harvester)
 
 find_package(Gettext)
 
-project(lliurex-homework-harvester)
+gettext_process_po_files(es ALL INSTALL_DESTINATION usr/share/locale/lliurex-homework-harvester PO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/lliurex-po/lliurex-homework-harvester/es.po)
+
 add_subdirectory(src)
 
 install(DIRECTORY install-files/usr DESTINATION /)
 
-gettext_process_po_files(es ${CMAKE_CURRENT_SOURCE_DIR}/lliurex-po/es.po)
