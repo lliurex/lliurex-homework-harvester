@@ -16,3 +16,9 @@ kcoreaddons_add_plugin(harvesterstudentplugin SOURCES harvesterstudentplugin.cpp
 kcoreaddons_desktop_to_json(harvesterstudentplugin harvesterstudentplugin.desktop) # generate the json file
 
 target_link_libraries(harvesterstudentplugin KF5::KIOWidgets)
+
+add_custom_target(
+    po
+    COMMAND xgettext --keyword=T --language=C++ ${CMAKE_CURRENT_SOURCE_DIR}/harvesterstudentplugin.cpp ${CMAKE_CURRENT_SOURCE_DIR}/harvesterteacherplugin.cpp -o ${CMAKE_CURRENT_SOURCE_DIR}/messages.po
+    COMMENT "extracting po..." 
+)
