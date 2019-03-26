@@ -6,12 +6,13 @@ set(CMAKE_AUTOMOC ON)
 find_package(KF5CoreAddons REQUIRED)
 find_package(KF5KIO REQUIRED)
 
+include(KDEInstallDirs)
+
 kcoreaddons_add_plugin(harvesterteacherplugin SOURCES harvesterteacherplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
 kcoreaddons_desktop_to_json(harvesterteacherplugin harvesterteacherplugin.desktop) # generate the json file
 
 target_link_libraries(harvesterteacherplugin KF5::KIOWidgets)
 
-message(WARNING  ${KDE_INSTALL_PLUGINDIR})
 kcoreaddons_add_plugin(harvesterstudentplugin SOURCES harvesterstudentplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
 kcoreaddons_desktop_to_json(harvesterstudentplugin harvesterstudentplugin.desktop) # generate the json file
 
