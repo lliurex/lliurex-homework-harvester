@@ -30,8 +30,6 @@
 using namespace std;
 using namespace lliurex::locale;
 
-
-
 HarvesterStudentPlugin::HarvesterStudentPlugin(QObject* parent, const QVariantList& list) : KAbstractFileItemActionPlugin(parent)
 {
     lliurex::locale::domain("lliurex-homework-harvester-plugin");
@@ -48,18 +46,19 @@ HarvesterStudentPlugin::~HarvesterStudentPlugin()
 
 void HarvesterStudentPlugin::triggered(bool checked)
 {
-    clog<<"student plugin"<<endl;
+    /* populate argument list */
+    QStringList args;
+    
     for (auto t:target) {
-        clog<<"file: "<<t.toLocalFile().toLocal8Bit().data()<<endl;
+        args<<t.toLocalFile();
     }
-    /*
+    
     QProcess child;
     
-    child.setProgram("/usr/bin/lliurex-homework-harvester");
-    child.setArguments({target.toLocalFile()});
+    child.setProgram("/usr/bin/lliurex-homework-sender");
+    child.setArguments(args);
     child.start();
-    child.waitForFinished();
-    */
+    
 }
 
 QList<QAction* > HarvesterStudentPlugin::actions(const KFileItemListProperties& fileItemInfos, QWidget* parentWidget)
@@ -71,21 +70,19 @@ QList<QAction* > HarvesterStudentPlugin::actions(const KFileItemListProperties& 
     bool isStudent=false;
     
     for (string group : groups) {
-        if (group=="sudo") {
+        if (group=="students") {
             isStudent=true;
             break;
         }
     }
     
     if (isStudent) {
-        clog<<"Im a student"<<endl;
         KFileItemList files = fileItemInfos.items();
         target.clear();
         
         list.append(actionSend);
         
         for (int n=0;n<files.size();n++) {
-            clog<<"pushing..."<<endl;
             KFileItem& item = files[n];
             
             if  (item.isFile()) {

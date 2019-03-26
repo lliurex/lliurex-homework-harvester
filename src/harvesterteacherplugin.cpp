@@ -46,16 +46,14 @@ HarvesterTeacherPlugin::~HarvesterTeacherPlugin()
 
 void HarvesterTeacherPlugin::triggered(bool checked)
 {
-    clog<<"teacher plugin"<<endl;
-    clog<<"url: "<<target.toLocalFile().toLocal8Bit().data()<<endl;
-    /*
+    
     QProcess child;
     
-    child.setProgram("/usr/bin/lliurex-homework-harvester");
+    child.setProgram("/usr/bin/lliurex-homework-sender");
     child.setArguments({target.toLocalFile()});
     child.start();
-    child.waitForFinished();
-    */
+    //child.waitForFinished();
+    
 }
 
 QList<QAction* > HarvesterTeacherPlugin::actions(const KFileItemListProperties& fileItemInfos, QWidget* parentWidget)
@@ -74,7 +72,7 @@ QList<QAction* > HarvesterTeacherPlugin::actions(const KFileItemListProperties& 
     bool isTeacher=false;
     
     for (string group : groups) {
-        if (group=="sudo") {
+        if (group=="teachers") {
             isTeacher=true;
             break;
         }
