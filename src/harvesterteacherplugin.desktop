@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Name=Lliurex homework harvester teacher plugin
+X-KDE-Library=harvesterteacherplugin
+X-KDE-ServiceTypes=KFileItemAction/Plugin
+MimeType=inode/directory;
