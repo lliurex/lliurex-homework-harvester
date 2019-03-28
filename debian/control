@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 7), cmake, extra-cmake-modules, libkf5coreaddons-de
 Standards-Version: 3.9.3
 
 Package: lliurex-homework-harvester
-Architecture: all
+Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, python, n4d(>=0.47.2), python-glade2
 Description:  Application to send files to teachers
  Application to send files to teachers with a right click.
