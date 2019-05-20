@@ -1,3 +1,9 @@
+lliurex-homework-harvester (0.9.3.0) bionic; urgency=low
+
+  * Master tag: 59fe3bfee43ce025b61808afce8a17832fe1bed3
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Mon, 20 May 2019 12:16:28 +0200
+
 lliurex-homework-harvester (0.9.3) bionic; urgency=medium
 
   * Created a pair of Dolphin plugins
