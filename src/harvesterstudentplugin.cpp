@@ -34,8 +34,10 @@ HarvesterStudentPlugin::HarvesterStudentPlugin(QObject* parent, const QVariantLi
 {
     lliurex::locale::domain("lliurex-homework-harvester-plugin");
     
+    icon=QIcon::fromTheme("document-send");
     actionSend=new QAction(this);
     actionSend->setText(T("Send homework"));
+    actionSend->setIcon(icon);
     
     connect(actionSend,&QAction::triggered,this,&HarvesterStudentPlugin::triggered);
 }
@@ -57,7 +59,7 @@ void HarvesterStudentPlugin::triggered(bool checked)
     
     child.setProgram("/usr/bin/lliurex-homework-sender");
     child.setArguments(args);
-    child.start();
+    child.startDetached(nullptr);
     
 }
 
