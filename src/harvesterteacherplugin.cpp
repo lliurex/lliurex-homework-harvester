@@ -49,10 +49,9 @@ void HarvesterTeacherPlugin::triggered(bool checked)
     
     QProcess child;
     
-    child.setProgram("/usr/bin/lliurex-homework-sender");
+    child.setProgram("/usr/bin/lliurex-homework-harvester");
     child.setArguments({target.toLocalFile()});
-    child.start();
-    //child.waitForFinished();
+    child.startDetached(nullptr);
     
 }
 

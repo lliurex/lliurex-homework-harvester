@@ -57,7 +57,7 @@ void HarvesterStudentPlugin::triggered(bool checked)
     
     child.setProgram("/usr/bin/lliurex-homework-sender");
     child.setArguments(args);
-    child.start();
+    child.startDetached(nullptr);
     
 }
 
