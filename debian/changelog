@@ -1,3 +1,11 @@
+lliurex-homework-harvester (0.9.4.0) bionic; urgency=medium
+
+  * Master tag: e5142d4568314d480c97d7c71da99fb0f5db858a
+  * Fixed a bug which killed application when plugin is destroyed (after click)
+  * Added icons
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Mon, 01 Jul 2019 12:41:56 +0200
+
 lliurex-homework-harvester (0.9.3.0) bionic; urgency=low
 
   * Master tag: 59fe3bfee43ce025b61808afce8a17832fe1bed3
