@@ -24,6 +24,7 @@
 #include <KFileItemListProperties>
 #include <KPluginFactory>
 #include <QAction>
+#include <QIcon>
 
 class HarvesterTeacherPlugin : public KAbstractFileItemActionPlugin
 {
@@ -32,6 +33,7 @@ class HarvesterTeacherPlugin : public KAbstractFileItemActionPlugin
     private:
     
     QUrl target;
+    QIcon icon;
     QAction* actionReceive;
     
     private slots:

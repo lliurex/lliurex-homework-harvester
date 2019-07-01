@@ -34,8 +34,10 @@ HarvesterTeacherPlugin::HarvesterTeacherPlugin(QObject* parent, const QVariantLi
 {
     lliurex::locale::domain("lliurex-homework-harvester-plugin");
     
+    icon=QIcon::fromTheme("download");
     actionReceive=new QAction(this);
     actionReceive->setText(T("Receive homework here"));
+    actionReceive->setIcon(icon);
     
     connect(actionReceive,&QAction::triggered,this,&HarvesterTeacherPlugin::triggered);
 }
