@@ -1,3 +1,10 @@
+lliurex-homework-harvester (0.9.5.0) bionic; urgency=medium
+
+  * Master tag: b45072a57d72663f9d8e1b1cbef695adf08dc0c5 
+  * Fixed a bug which prevented plugin to work on Desktop
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Thu, 04 Jul 2019 12:28:06 +0200
+
 lliurex-homework-harvester (0.9.4.0) bionic; urgency=medium
 
   * Master tag: e5142d4568314d480c97d7c71da99fb0f5db858a
