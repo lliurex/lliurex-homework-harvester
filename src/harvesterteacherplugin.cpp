@@ -82,7 +82,7 @@ QList<QAction* > HarvesterTeacherPlugin::actions(const KFileItemListProperties& 
     if (isTeacher and fileItemInfos.isDirectory() and fileItemInfos.supportsWriting()) {
         list.append(actionReceive);
 
-        target = files.first().url();
+        target = files.first().targetUrl();
     }
     
     return list;
