@@ -88,7 +88,7 @@ QList<QAction* > HarvesterStudentPlugin::actions(const KFileItemListProperties& 
             KFileItem& item = files[n];
             
             if  (item.isFile()) {
-                target.push_back(item.url());
+                target.push_back(item.targetUrl());
             }
         }
     
