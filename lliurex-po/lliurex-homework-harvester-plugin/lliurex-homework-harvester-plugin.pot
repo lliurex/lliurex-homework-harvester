@@ -18,9 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: /home/quique/workspace/lliurex-homework-harvester/src/harvesterstudentplugin.cpp:38
-msgid "Send homework"
+msgid "Send file to teacher"
 msgstr ""
 
 #: /home/quique/workspace/lliurex-homework-harvester/src/harvesterteacherplugin.cpp:38
-msgid "Receive homework here"
+msgid "Set this folder to receive homeworks"
 msgstr ""
