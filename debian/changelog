@@ -1,3 +1,9 @@
+lliurex-homework-harvester (0.9.7.0) bionic; urgency=medium
+
+  * changed translation domain
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 18 Jul 2019 13:17:50 +0200
+
 lliurex-homework-harvester (0.9.6.0) bionic; urgency=medium
 
   * Added translations
