@@ -150,7 +150,7 @@
                                 <child>
                                   <widget class="GtkImage" id="image3">
                                     <property name="visible">True</property>
-                                    <property name="icon_name">stock_person</property>
+                                    <property name="icon_name">avatar-default-symbolic</property>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
@@ -207,7 +207,7 @@
                                 <child>
                                   <widget class="GtkImage" id="image4">
                                     <property name="visible">True</property>
-                                    <property name="icon_name">password</property>
+                                    <property name="icon_name">dialog-password-symbolic</property>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
