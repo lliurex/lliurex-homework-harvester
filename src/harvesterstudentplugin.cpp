@@ -32,7 +32,7 @@ using namespace lliurex::locale;
 
 HarvesterStudentPlugin::HarvesterStudentPlugin(QObject* parent, const QVariantList& list) : KAbstractFileItemActionPlugin(parent)
 {
-    lliurex::locale::domain("lliurex-homework-harvester-plugin");
+    lliurex::locale::domain("lliurex-homework-harvester");
     
     icon=QIcon::fromTheme("document-send");
     actionSend=new QAction(this);
