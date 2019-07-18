@@ -1,3 +1,10 @@
+lliurex-homework-harvester (0.9.6.0) bionic; urgency=medium
+
+  * Added translations
+  * Fixed missing icons
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 18 Jul 2019 09:51:58 +0200
+
 lliurex-homework-harvester (0.9.5.0) bionic; urgency=medium
 
   * Master tag: b45072a57d72663f9d8e1b1cbef695adf08dc0c5 
