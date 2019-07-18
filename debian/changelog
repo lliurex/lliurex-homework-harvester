@@ -1,0 +1,186 @@
+lliurex-homework-harvester (0.9.8.0) bionic; urgency=medium
+
+  * Minor changes
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 18 Jul 2019 13:32:49 +0200
+
+lliurex-homework-harvester (0.9.7.0) bionic; urgency=medium
+
+  * changed translation domain
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 18 Jul 2019 13:17:50 +0200
+
+lliurex-homework-harvester (0.9.6.0) bionic; urgency=medium
+
+  * Added translations
+  * Fixed missing icons
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 18 Jul 2019 09:51:58 +0200
+
+lliurex-homework-harvester (0.9.5.0) bionic; urgency=medium
+
+  * Master tag: b45072a57d72663f9d8e1b1cbef695adf08dc0c5 
+  * Fixed a bug which prevented plugin to work on Desktop
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Thu, 04 Jul 2019 12:28:06 +0200
+
+lliurex-homework-harvester (0.9.4.0) bionic; urgency=medium
+
+  * Master tag: e5142d4568314d480c97d7c71da99fb0f5db858a
+  * Fixed a bug which killed application when plugin is destroyed (after click)
+  * Added icons
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Mon, 01 Jul 2019 12:41:56 +0200
+
+lliurex-homework-harvester (0.9.3.0) bionic; urgency=low
+
+  * Master tag: 59fe3bfee43ce025b61808afce8a17832fe1bed3
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Mon, 20 May 2019 12:16:28 +0200
+
+lliurex-homework-harvester (0.9.3) bionic; urgency=medium
+
+  * Created a pair of Dolphin plugins
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Thu, 28 Mar 2019 13:49:39 +0100
+
+lliurex-homework-harvester (0.9.2) bionic; urgency=medium
+
+  * First bionic release
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Mon, 28 Jan 2019 09:33:03 +0100
+
+lliurex-homework-harvester (0.9.1.3) xenial; urgency=high
+
+  * Fixed require_version call 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Tue, 25 Apr 2017 17:58:42 +0200
+
+lliurex-homework-harvester (0.9.1.2) xenial; urgency=high
+
+  * Cleaning gtk warning messages
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Tue, 25 Apr 2017 14:58:18 +0200
+
+lliurex-homework-harvester (0.9.1.1) xenial; urgency=medium
+
+  * Added desktop files
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Wed, 15 Mar 2017 13:26:53 +0100
+
+lliurex-homework-harvester (0.9.1) xenial; urgency=medium
+
+  * Adapted for reflect the changes to TeacherShare module (>=0.86)
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Wed, 15 Mar 2017 12:07:14 +0100
+
+lliurex-homework-harvester (0.9) xenial; urgency=high
+
+  * Using python-caja instead of python-nautilus
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 02 Feb 2017 13:56:47 +0100
+
+lliurex-homework-harvester (0.8.8) xenial; urgency=medium
+
+  * Remove makefile of src folder 
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 29 Aug 2016 12:52:21 +0200
+
+lliurex-homework-harvester (0.8.7) xenial; urgency=medium
+
+  * Fix valencian translation
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 29 Aug 2016 08:46:34 +0200
+
+lliurex-homework-harvester (0.8.6ubuntu1) xenial; urgency=medium
+
+  * first xenial release 
+
+ -- Daniel Duran Vecino <daduve@gmail.com>  Tue, 07 Jun 2016 13:49:30 +0200
+
+lliurex-homework-harvester (0.8.6) trusty; urgency=medium
+
+  * first trusty release
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Wed, 17 Dec 2014 09:02:25 +0100
+
+lliurex-homework-harvester (0.8.5) precise; urgency=low
+
+  * UNRELEASED
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 17 Oct 2013 08:20:44 +0200
+
+lliurex-homework-harvester (0.8.4) precise; urgency=high
+
+  * Fixed spanish translation once again
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Wed, 16 Oct 2013 14:00:34 +0200
+
+lliurex-homework-harvester (0.8.3) precise; urgency=low
+
+  * Fixed spanish/unknown translations
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Mon, 30 Sep 2013 11:35:00 +0200
+
+lliurex-homework-harvester (0.8.2) precise; urgency=high
+
+  * Added dirty translation fix to avoid nautilus locale bug. 
+     Thanks to Jose Boluda for noticing.
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Mon, 01 Jul 2013 08:13:13 +0200
+
+lliurex-homework-harvester (0.8.1) precise; urgency=low
+
+  * First working version? 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 20 Jun 2013 09:43:04 +0200
+
+lliurex-homework-harvester (0.8) precise; urgency=low
+
+  * First pandora release
+
+ -- Hector Garcia Huerta <lliurex@server.aula>  Mon, 26 Nov 2012 13:00:21 +0100
+
+lliurex-homework-harvester (0.7) unstable; urgency=low
+
+  * Fixed some translations
+
+ -- Hector Garcia Huerta <lliurex_devel1@edu.gva.es>  Thu, 11 Oct 2012 11:45:01 +0200
+
+lliurex-homework-harvester (0.6) unstable; urgency=low
+
+  * Fixed variable error
+
+ -- Hector Garcia Huerta <lliurex_devel1@edu.gva.es>  Wed, 03 Oct 2012 09:32:30 +0200
+
+lliurex-homework-harvester (0.5) unstable; urgency=low
+
+  * Adding debug text
+
+ -- Hector Garcia Huerta <lliurex_devel1@edu.gva.es>  Wed, 27 Jun 2012 13:59:47 +0200
+
+lliurex-homework-harvester (0.4) unstable; urgency=low
+
+  * Updated spanish translation
+  * Added valencian translation
+  * Fixed apply button name
+
+ -- Hector Garcia Huerta <lliurex_devel1@edu.gva.es>  Mon, 21 May 2012 09:14:11 +0200
+
+lliurex-homework-harvester (0.3) unstable; urgency=low
+
+  * using send_to_teacher_net
+
+ -- Hector Garcia Huerta <lliurex_devel1@edu.gva.es>  Tue, 08 May 2012 10:17:38 +0200
+
+lliurex-homework-harvester (0.2) unstable; urgency=low
+
+  * Based on the newer version of TeacherShareManager n4d plugin
+
+ -- Hector Garcia Huerta <lliurex_devel1@edu.gva.es>  Tue, 08 May 2012 10:14:40 +0200
+
+lliurex-homework-harvester (0.1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Hector Garcia Huerta <lliurex_devel1@edu.gva.es>  Wed, 08 Feb 2012 08:49:33 +0100
