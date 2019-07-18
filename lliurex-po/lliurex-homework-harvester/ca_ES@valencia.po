@@ -125,3 +125,11 @@ msgstr "Introduïu la vostra contrasenya i polseu Aplica."
 #: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:302
 msgid "<b>Lliurex Homework Harvester</b>"
 msgstr "<b>Recol·lector de treballs del LliureX</b>"
+
+#: /home/quique/workspace/lliurex-homework-harvester/src/harvesterstudentplugin.cpp:38
+msgid "Send file to teacher"
+msgstr "Envia el fitxer al professor o professor/a"
+
+#: /home/quique/workspace/lliurex-homework-harvester/src/harvesterteacherplugin.cpp:38
+msgid "Set this folder to receive homeworks"
+msgstr "Establix esta carpeta per a rebre els treballs"
