@@ -19,8 +19,8 @@ msgstr ""
 
 #: /home/quique/workspace/lliurex-homework-harvester/src/harvesterstudentplugin.cpp:38
 msgid "Send file to teacher"
-msgstr "Enviar fichero a profesor/a"
+msgstr "Envia el fitxer al professor o professor/a"
 
 #: /home/quique/workspace/lliurex-homework-harvester/src/harvesterteacherplugin.cpp:38
 msgid "Set this folder to receive homeworks"
-msgstr "Marcar esta carpeta para recibir trabajos"
+msgstr "Establix esta carpeta per a rebre els treballs"

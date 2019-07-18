@@ -36,7 +36,7 @@ HarvesterTeacherPlugin::HarvesterTeacherPlugin(QObject* parent, const QVariantLi
     
     icon=QIcon::fromTheme("download");
     actionReceive=new QAction(this);
-    actionReceive->setText(T("Receive homework here"));
+    actionReceive->setText(T("Set this folder to receive homeworks"));
     actionReceive->setIcon(icon);
     
     connect(actionReceive,&QAction::triggered,this,&HarvesterTeacherPlugin::triggered);

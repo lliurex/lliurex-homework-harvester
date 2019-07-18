@@ -36,7 +36,7 @@ HarvesterStudentPlugin::HarvesterStudentPlugin(QObject* parent, const QVariantLi
     
     icon=QIcon::fromTheme("document-send");
     actionSend=new QAction(this);
-    actionSend->setText(T("Send homework"));
+    actionSend->setText(T("Send file to teacher"));
     actionSend->setIcon(icon);
     
     connect(actionSend,&QAction::triggered,this,&HarvesterStudentPlugin::triggered);
