@@ -128,11 +128,3 @@ msgstr "Introduzca su password y presione Aplicar"
 #: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:302
 msgid "<b>Lliurex Homework Harvester</b>"
 msgstr "<b>Lliurex Homework Harvester</b>"
-
-#: /home/quique/workspace/lliurex-homework-harvester/src/harvesterstudentplugin.cpp:38
-msgid "Send file to teacher"
-msgstr "Enviar fichero a profesor/a"
-
-#: /home/quique/workspace/lliurex-homework-harvester/src/harvesterteacherplugin.cpp:38
-msgid "Set this folder to receive homeworks"
-msgstr "Marcar esta carpeta para recibir trabajos"
