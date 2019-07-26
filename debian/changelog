@@ -1,3 +1,9 @@
+lliurex-homework-harvester (0.9.9.0) bionic; urgency=medium
+
+  * Adding ca@valencia
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Fri, 26 Jul 2019 11:29:05 +0200
+
 lliurex-homework-harvester (0.9.8.0) bionic; urgency=medium
 
   * Minor changes
