@@ -5,6 +5,7 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_S
 set(CMAKE_AUTOMOC ON)
 find_package(KF5CoreAddons REQUIRED)
 find_package(KF5KIO REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets)
 
 include(KDEInstallDirs)
 
@@ -17,6 +18,13 @@ kcoreaddons_add_plugin(harvesterstudentplugin SOURCES harvesterstudentplugin.cpp
 kcoreaddons_desktop_to_json(harvesterstudentplugin harvesterstudentplugin.desktop) # generate the json file
 
 target_link_libraries(harvesterstudentplugin KF5::KIOWidgets)
+
+add_executable(llx-homework-student studentapp.cpp studentwindow.cpp)
+target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets)
+
+add_executable(llx-homework-teacher teacherapp.cpp teacherwindow.cpp)
+target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets)
+
 
 add_custom_target(
     po
