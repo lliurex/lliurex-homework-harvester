@@ -18,6 +18,7 @@
 */
 
 #include "studentwindow.hpp"
+#include "ui_studentframe1.h"
 
 #include <QDialogButtonBox>
 #include <QVBoxLayout>

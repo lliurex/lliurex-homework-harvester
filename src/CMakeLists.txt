@@ -3,6 +3,8 @@ find_package(ECM 1.0.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 find_package(KF5CoreAddons REQUIRED)
 find_package(KF5KIO REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets)
@@ -19,7 +21,7 @@ kcoreaddons_desktop_to_json(harvesterstudentplugin harvesterstudentplugin.deskto
 
 target_link_libraries(harvesterstudentplugin KF5::KIOWidgets)
 
-add_executable(llx-homework-student studentapp.cpp studentwindow.cpp)
+add_executable(llx-homework-student studentapp.cpp studentwindow.cpp studentframe1.ui)
 target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets)
 
 add_executable(llx-homework-teacher teacherapp.cpp teacherwindow.cpp)
