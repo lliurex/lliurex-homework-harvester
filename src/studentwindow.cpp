@@ -25,6 +25,10 @@
 #include <QFrame>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QStackedWidget>
+#include <QImage>
+#include <QDebug>
+#include <QTimer>
 
 #include <iostream>
 
@@ -46,12 +50,67 @@ StudentWindow::StudentWindow() : QMainWindow()
     mainFrame->setLayout(mainLayout);
     setCentralWidget(mainFrame);
     
+    QStackedWidget* stack=new QStackedWidget();
+    mainLayout->addWidget(stack);
+    
+    //frame 1
+    Ui::frame1* frame1 = new Ui::frame1();
+    QFrame* container = new QFrame();
+    frame1->setupUi(container);
+    stack->addWidget(container);
+    
+    //frame 2
+    int imgId=0;
+    const QString images[4]={"://wait00.svg","://wait01.svg","://wait02.svg","://wait03.svg"};
+
+    QFrame* frame2 = new QFrame();
+    QVBoxLayout*vlayout = new QVBoxLayout();
+    frame2->setLayout(vlayout);
+    QLabel* lbl;
+    lbl=new QLabel("Sending files...");
+    
+    lbl->setAlignment(Qt::AlignCenter);
+    vlayout->addWidget(lbl);
+    QPixmap px(images[0]);
+    lbl = new QLabel();
+    
+    storage["frame2.image"]=lbl;
+    lbl->setPixmap(px);
+    lbl->setAlignment(Qt::AlignCenter);
+    vlayout->addWidget(lbl);
+    
+    vlayout->addStretch(1);
+    
+    stack->addWidget(frame2);
+    
+    QTimer *timer = new QTimer(this);
+    storage["frame2.timer"]=timer;
+    
+    connect(timer,&QTimer::timeout,[=]()mutable {
+        imgId++;
+        imgId=imgId%4;
+        QPixmap px(images[imgId]);
+        lbl->setPixmap(px);
+    });
+    
     QDialogButtonBox* buttonBox;
+    buttonBox = new QDialogButtonBox();
+    QAbstractButton* btnClose;
+    QAbstractButton* btnSend;
+    btnClose=buttonBox->addButton(QDialogButtonBox::Close);
+    btnSend=buttonBox->addButton("send",QDialogButtonBox::ActionRole);
     
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    
-    connect(buttonBox,&QDialogButtonBox::clicked, [this](QAbstractButton* button) {
-        this->close();
+    connect(buttonBox,&QDialogButtonBox::clicked, [=](QAbstractButton* button) {
+        if (button==btnClose) {
+            this->close();
+        }
+        
+        if (button==btnSend) {
+            qDebug()<<"sending files...";
+            stack->setCurrentIndex(1);
+            timer->start(500);
+            btnSend->hide();
+        }
     });
     
     mainLayout->addWidget(buttonBox);

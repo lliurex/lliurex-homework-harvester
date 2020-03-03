@@ -22,6 +22,9 @@
 
 #include <QMainWindow>
 
+#include <string>
+#include <map>
+
 namespace harvester
 {
     class StudentWindow: public QMainWindow
@@ -29,7 +32,9 @@ namespace harvester
         Q_OBJECT
         
         public:
-            
+        
+        std::map<std::string,QObject*> storage;
+        
         StudentWindow();
         
     };
