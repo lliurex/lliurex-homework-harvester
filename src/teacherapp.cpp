@@ -20,6 +20,9 @@
 #include "teacherwindow.hpp"
 
 #include <QApplication>
+#include <QCommandLineParser>
+#include <QDebug>
+
 #include <iostream>
 
 using namespace harvester;
@@ -29,7 +32,31 @@ int main(int argc,char* argv[])
 {
     
     QApplication app(argc,argv);
+    QApplication::setApplicationName("llx-homework-teacher");
+    QApplication::setApplicationVersion("1.0");
     
+    QCommandLineParser parser;
+    parser.setApplicationDescription("LliureX Homework Harvester teacher gui");
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument("action", "action to do (add | del)");
+    parser.addPositionalArgument("destination", "folder to share");
+    
+    parser.process(app);
+    
+    const QStringList args = parser.positionalArguments();
+    
+    if (args[0]=="add") {
+        qDebug()<<"add "<<args[1];
+    }
+    else {
+        if (args[0]=="del") {
+            qDebug()<<"del "<<args[1];
+        }
+        else {
+            qDebug()<<"Error";
+        }
+    }
     TeacherWindow win;
     
     app.exec();

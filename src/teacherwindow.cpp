@@ -24,6 +24,7 @@
 #include <QFrame>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QStackedWidget>
 
 #include <iostream>
 
@@ -47,7 +48,13 @@ TeacherWindow::TeacherWindow() : QMainWindow()
     
     QDialogButtonBox* buttonBox;
     
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    buttonBox = new QDialogButtonBox();
+    QAbstractButton* btnClose;
+    QAbstractButton* btnAdd;
+    QAbstractButton* btnDel;
+    btnClose=buttonBox->addButton(QDialogButtonBox::Close);
+    
+    btnAdd=buttonBox->addButton("Add",QDialogButtonBox::ActionRole);
     
     connect(buttonBox,&QDialogButtonBox::clicked, [this](QAbstractButton* button) {
         this->close();
