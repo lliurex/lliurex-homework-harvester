@@ -25,36 +25,71 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QStackedWidget>
+#include <QLabel>
+#include <QStringRef>
 
 #include <iostream>
 
 using namespace harvester;
 using namespace std;
 
-TeacherWindow::TeacherWindow() : QMainWindow()
+TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWindow()
 {
+    m_action=action;
+    m_destination=destination;
+    
+    m_name = m_destination.splitRef("/").last().toString();
+    
     setWindowTitle("Receive homework");
     setWindowIcon(QIcon::fromTheme("folder-public"));
-    setFixedSize(QSize(400, 550));
+    setFixedSize(QSize(400, 300));
     setWindowFlags(Qt::Dialog);
     
     QFrame* mainFrame;
     QVBoxLayout* mainLayout;
+    
+    QString actionName;
+    QString descriptionMessage;
+    
+    if (m_action==TeacherAction::Add) {
+        actionName="Add";
+        descriptionMessage="Add this folder to receive homeworks";
+    }
+    if (m_action==TeacherAction::Delete) {
+        actionName="Delete";
+        descriptionMessage="Remove this folder as homework destinations";
+    }
     
     mainFrame = new QFrame();
     mainLayout = new QVBoxLayout();
     mainFrame->setLayout(mainLayout);
     setCentralWidget(mainFrame);
     
+    QLabel* message = new QLabel(descriptionMessage);
+    message->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(message);
+    
+    QLabel* lblIcon = new QLabel();
+    lblIcon->setAlignment(Qt::AlignCenter);
+    QIcon icon=QIcon::fromTheme("folder-network");
+    lblIcon->setPixmap(icon.pixmap(64,64));
+    mainLayout->addWidget(lblIcon);
+    
+    QLabel* lblName = new QLabel(m_name);
+    lblName->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(lblName);
+    
+    mainLayout->addStretch(1);
+    
     QDialogButtonBox* buttonBox;
     
     buttonBox = new QDialogButtonBox();
     QAbstractButton* btnClose;
-    QAbstractButton* btnAdd;
+    QAbstractButton* btnAction;
     QAbstractButton* btnDel;
     btnClose=buttonBox->addButton(QDialogButtonBox::Close);
     
-    btnAdd=buttonBox->addButton("Add",QDialogButtonBox::ActionRole);
+    btnAction=buttonBox->addButton(actionName,QDialogButtonBox::ActionRole);
     
     connect(buttonBox,&QDialogButtonBox::clicked, [this](QAbstractButton* button) {
         this->close();

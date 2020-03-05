@@ -24,13 +24,23 @@
 
 namespace harvester
 {
+    enum class TeacherAction
+    {
+        Add,
+        Delete
+    };
+    
     class TeacherWindow: public QMainWindow
     {
         Q_OBJECT
         
         public:
-            
-        TeacherWindow();
+        
+        TeacherAction m_action;
+        QString m_destination;
+        QString m_name;
+        
+        TeacherWindow(TeacherAction action,QString destination);
         
     };
 }

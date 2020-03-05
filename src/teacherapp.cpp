@@ -46,18 +46,26 @@ int main(int argc,char* argv[])
     
     const QStringList args = parser.positionalArguments();
     
+    if (args.size()<2) {
+        parser.showHelp(0);
+    }
+    
+    TeacherAction action;
+    
     if (args[0]=="add") {
-        qDebug()<<"add "<<args[1];
+       action=TeacherAction::Add;
     }
     else {
         if (args[0]=="del") {
-            qDebug()<<"del "<<args[1];
+            action=TeacherAction::Delete;
         }
         else {
-            qDebug()<<"Error";
+            cerr<<"Error: expected action: add or del, not "<<args[0].toStdString()<<endl;
+            
+            return 1;
         }
     }
-    TeacherWindow win;
+    TeacherWindow win(action,args[1]);
     
     app.exec();
     
