@@ -20,6 +20,8 @@
 #include "studentwindow.hpp"
 
 #include <QApplication>
+#include <QCommandLineParser>
+
 #include <iostream>
 
 using namespace harvester;
@@ -29,8 +31,18 @@ int main(int argc,char* argv[])
 {
     
     QApplication app(argc,argv);
+    QApplication::setApplicationName("llx-homework-student");
+    QApplication::setApplicationVersion("1.0");
     
-    StudentWindow win;
+    QCommandLineParser parser;
+    parser.setApplicationDescription("LliureX Homework Harvester student gui");
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument("files", "files to share");
+    
+    parser.process(app);
+    
+    StudentWindow win(parser.positionalArguments());
     
     app.exec();
     

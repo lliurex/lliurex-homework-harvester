@@ -21,6 +21,7 @@
 #define HARVESTER_STUDENT_WINDOW
 
 #include <QMainWindow>
+#include <QStringList>
 
 #include <string>
 #include <map>
@@ -35,7 +36,7 @@ namespace harvester
         
         std::map<std::string,QObject*> storage;
         
-        StudentWindow();
+        StudentWindow(QStringList files);
         
     };
 }

@@ -20,6 +20,7 @@
 #include "studentwindow.hpp"
 #include "ui_studentframe1.h"
 
+#include <QFileDialog>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QFrame>
@@ -35,7 +36,7 @@
 using namespace harvester;
 using namespace std;
 
-StudentWindow::StudentWindow() : QMainWindow()
+StudentWindow::StudentWindow(QStringList files) : QMainWindow()
 {
     setWindowTitle("Send files to teacher");
     setWindowIcon(QIcon::fromTheme("folder-public"));
@@ -58,6 +59,26 @@ StudentWindow::StudentWindow() : QMainWindow()
     QFrame* container = new QFrame();
     frame1->setupUi(container);
     stack->addWidget(container);
+    
+    for (auto f:files) {
+        frame1->listFiles->addItem(f);
+    }
+    connect(frame1->btnAdd,&QPushButton::clicked, [this,frame1]() mutable {
+        QStringList files = QFileDialog::getOpenFileNames(this,"Add files");
+        
+        for (auto f:files) {
+            clog<<"* "<<f.toStdString()<<endl;
+            frame1->listFiles->addItem(f);
+        }
+    });
+    
+    connect(frame1->btnRemove,&QPushButton::clicked, [frame1]() mutable {
+        int row = frame1->listFiles->currentRow();
+        
+        if (row>=0) {
+            delete(frame1->listFiles->takeItem(row));
+        }
+    });
     
     //frame 2
     int imgId=0;
