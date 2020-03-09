@@ -27,6 +27,10 @@
 #include <QStackedWidget>
 #include <QLabel>
 #include <QStringRef>
+#include <QFile>
+#include <QFileInfo>
+#include <QLineEdit>
+#include <QDebug>
 
 #include <iostream>
 
@@ -36,9 +40,16 @@ using namespace std;
 TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWindow()
 {
     m_action=action;
-    m_destination=destination;
+    
+    QFileInfo info(destination);
+    
+    qDebug()<<"1 "<<destination;
+    m_destination=info.canonicalFilePath();
+    qDebug()<<"2 "<<m_destination;
     
     m_name = m_destination.splitRef("/").last().toString();
+    //m_name=info.fileName();
+    qDebug()<<"3 "<<m_name;
     
     setWindowTitle("Receive homework");
     setWindowIcon(QIcon::fromTheme("folder-public"));
@@ -75,9 +86,32 @@ TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWi
     lblIcon->setPixmap(icon.pixmap(64,64));
     mainLayout->addWidget(lblIcon);
     
-    QLabel* lblName = new QLabel(m_name);
-    lblName->setAlignment(Qt::AlignCenter);
-    mainLayout->addWidget(lblName);
+    if (m_action==TeacherAction::Add) {
+        QStackedWidget* stack=new QStackedWidget();
+        QPushButton* btnName = new QPushButton(m_name);
+        btnName->setFlat(true);
+        
+        connect(btnName,&QPushButton::clicked, [stack]() mutable {
+            stack->setCurrentIndex(1);
+        });
+        
+        stack->addWidget(btnName);
+        
+        QLineEdit* txtName = new QLineEdit(m_name);
+        txtName->setAlignment(Qt::AlignCenter);
+        connect(txtName,&QLineEdit::editingFinished, [stack,btnName,txtName]() mutable {
+            btnName->setText(txtName->text());
+            stack->setCurrentIndex(0);
+        });
+        
+        stack->addWidget(txtName);
+        
+        mainLayout->addWidget(stack);
+    }
+    
+    QLabel* lblFileName = new QLabel(m_destination);
+    lblFileName->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(lblFileName);
     
     mainLayout->addStretch(1);
     
