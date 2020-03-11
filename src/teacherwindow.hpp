@@ -21,6 +21,10 @@
 #define HARVESTER_TEACHER_WINDOW
 
 #include <QMainWindow>
+#include <QDialogButtonBox>
+
+#include <string>
+#include <map>
 
 namespace harvester
 {
@@ -36,12 +40,17 @@ namespace harvester
         
         public:
         
+        std::map<std::string,QObject*> storage;
+        
         TeacherAction m_action;
         QString m_destination;
         QString m_name;
         
         TeacherWindow(TeacherAction action,QString destination);
         
+        public slots:
+        
+        void buttonBoxClicked(QAbstractButton* button);
     };
 }
 

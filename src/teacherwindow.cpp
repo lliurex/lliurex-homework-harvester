@@ -18,6 +18,7 @@
 */
 
 #include "teacherwindow.hpp"
+#include "ui_login.h"
 
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
@@ -71,6 +72,15 @@ TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWi
         descriptionMessage="Remove this folder as homework destinations";
     }
     
+    Ui::loginFrame* loginUI = new Ui::loginFrame();
+    QFrame* frameLogin = new QFrame(this);
+    loginUI->setupUi(frameLogin);
+    storage["frameLogin"]=frameLogin;
+    frameLogin->setWindowTitle("N4D login");
+    frameLogin->setWindowIcon(QIcon::fromTheme("folder-public"));
+    frameLogin->setWindowFlags(Qt::Dialog);
+    frameLogin->setWindowModality(Qt::WindowModal);
+    
     mainFrame = new QFrame();
     mainLayout = new QVBoxLayout();
     mainFrame->setLayout(mainLayout);
@@ -120,16 +130,30 @@ TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWi
     buttonBox = new QDialogButtonBox();
     QAbstractButton* btnClose;
     QAbstractButton* btnAction;
-    QAbstractButton* btnDel;
     btnClose=buttonBox->addButton(QDialogButtonBox::Close);
     
     btnAction=buttonBox->addButton(actionName,QDialogButtonBox::ActionRole);
     
-    connect(buttonBox,&QDialogButtonBox::clicked, [this](QAbstractButton* button) {
-        this->close();
-    });
+    storage["btnAction"]=btnAction;
+    storage["btnClose"]=btnClose;
+    
+    connect(buttonBox,&QDialogButtonBox::clicked, this, &TeacherWindow::buttonBoxClicked);
     
     mainLayout->addWidget(buttonBox);
     
+    btnAction->setFocus();
+    
     show();
+}
+
+void TeacherWindow::buttonBoxClicked(QAbstractButton* button)
+{
+    if (button==storage["btnClose"]) {
+        this->close();
+    }
+    
+    if (button==storage["btnAction"]) {
+        static_cast<QFrame*>(storage["frameLogin"])->show();
+    }
+    
 }

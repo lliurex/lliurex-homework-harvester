@@ -21,7 +21,7 @@ kcoreaddons_desktop_to_json(harvesterstudentplugin harvesterstudentplugin.deskto
 
 target_link_libraries(harvesterstudentplugin KF5::KIOWidgets)
 
-add_executable(llx-homework-student studentapp.cpp studentwindow.cpp studentframe1.ui ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
+add_executable(llx-homework-student studentapp.cpp studentwindow.cpp studentframe1.ui login.ui ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
 target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets)
 
 add_executable(llx-homework-teacher teacherapp.cpp teacherwindow.cpp)
