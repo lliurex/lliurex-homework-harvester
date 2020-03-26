@@ -80,6 +80,16 @@ TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWi
     frameLogin->setWindowIcon(QIcon::fromTheme("folder-public"));
     frameLogin->setWindowFlags(Qt::Dialog);
     frameLogin->setWindowModality(Qt::WindowModal);
+    frameLogin->setFixedSize(QSize(340,170));
+    
+    connect(loginUI->buttonBox,&QDialogButtonBox::rejected, [=]() {
+        frameLogin->hide();
+    });
+    
+    connect(loginUI->buttonBox,&QDialogButtonBox::accepted, [=]() {
+        //TODO:check n4d login here
+        frameLogin->hide();
+    });
     
     mainFrame = new QFrame();
     mainLayout = new QVBoxLayout();
