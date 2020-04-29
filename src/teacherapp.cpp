@@ -50,14 +50,14 @@ int main(int argc,char* argv[])
         parser.showHelp(0);
     }
     
-    TeacherAction action;
+    teacher::Action action;
     
     if (args[0]=="add") {
-       action=TeacherAction::Add;
+       action=teacher::Action::Add;
     }
     else {
         if (args[0]=="del") {
-            action=TeacherAction::Delete;
+            action=teacher::Action::Delete;
         }
         else {
             cerr<<"Error: expected action: add or del, not "<<args[0].toStdString()<<endl;
@@ -65,7 +65,7 @@ int main(int argc,char* argv[])
             return 1;
         }
     }
-    TeacherWindow win(action,args[1]);
+    teacher::Window win(action,args[1]);
     
     app.exec();
     

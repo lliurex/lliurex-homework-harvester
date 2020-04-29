@@ -18,7 +18,6 @@
 */
 
 #include "teacherwindow.hpp"
-#include "ui_login.h"
 
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
@@ -32,13 +31,14 @@
 #include <QFileInfo>
 #include <QLineEdit>
 #include <QDebug>
+#include <QTimer>
 
 #include <iostream>
 
 using namespace harvester;
 using namespace std;
 
-TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWindow()
+teacher::Window::Window(Action action,QString destination) : QMainWindow()
 {
     m_action=action;
     
@@ -63,33 +63,14 @@ TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWi
     QString actionName;
     QString descriptionMessage;
     
-    if (m_action==TeacherAction::Add) {
+    if (m_action==teacher::Action::Add) {
         actionName="Add";
         descriptionMessage="Add this folder to receive homeworks";
     }
-    if (m_action==TeacherAction::Delete) {
+    if (m_action==teacher::Action::Delete) {
         actionName="Delete";
         descriptionMessage="Remove this folder as homework destinations";
     }
-    
-    Ui::loginFrame* loginUI = new Ui::loginFrame();
-    QFrame* frameLogin = new QFrame(this);
-    loginUI->setupUi(frameLogin);
-    storage["frameLogin"]=frameLogin;
-    frameLogin->setWindowTitle("N4D login");
-    frameLogin->setWindowIcon(QIcon::fromTheme("folder-public"));
-    frameLogin->setWindowFlags(Qt::Dialog);
-    frameLogin->setWindowModality(Qt::WindowModal);
-    frameLogin->setFixedSize(QSize(340,170));
-    
-    connect(loginUI->buttonBox,&QDialogButtonBox::rejected, [=]() {
-        frameLogin->hide();
-    });
-    
-    connect(loginUI->buttonBox,&QDialogButtonBox::accepted, [=]() {
-        //TODO:check n4d login here
-        frameLogin->hide();
-    });
     
     mainFrame = new QFrame();
     mainLayout = new QVBoxLayout();
@@ -106,7 +87,7 @@ TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWi
     lblIcon->setPixmap(icon.pixmap(64,64));
     mainLayout->addWidget(lblIcon);
     
-    if (m_action==TeacherAction::Add) {
+    if (m_action==teacher::Action::Add) {
         QStackedWidget* stack=new QStackedWidget();
         QPushButton* btnName = new QPushButton(m_name);
         btnName->setFlat(true);
@@ -147,23 +128,33 @@ TeacherWindow::TeacherWindow(TeacherAction action,QString destination) : QMainWi
     storage["btnAction"]=btnAction;
     storage["btnClose"]=btnClose;
     
-    connect(buttonBox,&QDialogButtonBox::clicked, this, &TeacherWindow::buttonBoxClicked);
+    connect(buttonBox,&QDialogButtonBox::clicked, this, &teacher::Window::buttonBoxClicked);
     
     mainLayout->addWidget(buttonBox);
     
     btnAction->setFocus();
     
+    QTimer* timer=new QTimer();
+    storage["timer"]=timer;
+    connect(timer, &QTimer::timeout, this, &teacher::Window::timeout);
+    
     show();
 }
 
-void TeacherWindow::buttonBoxClicked(QAbstractButton* button)
+void teacher::Window::timeout()
+{
+    qDebug()<<"tic toc";
+}
+
+void teacher::Window::buttonBoxClicked(QAbstractButton* button)
 {
     if (button==storage["btnClose"]) {
         this->close();
     }
     
     if (button==storage["btnAction"]) {
-        static_cast<QFrame*>(storage["frameLogin"])->show();
+        button->setEnabled(false);
+        static_cast<QTimer*>(storage["timer"])->start(1000);
     }
     
 }

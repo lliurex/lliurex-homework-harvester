@@ -28,30 +28,34 @@
 
 namespace harvester
 {
-    enum class TeacherAction
+    namespace teacher
     {
-        Add,
-        Delete
-    };
+        enum class Action
+        {
+            Add,
+            Delete
+        };
     
-    class TeacherWindow: public QMainWindow
-    {
-        Q_OBJECT
-        
-        public:
-        
-        std::map<std::string,QObject*> storage;
-        
-        TeacherAction m_action;
-        QString m_destination;
-        QString m_name;
-        
-        TeacherWindow(TeacherAction action,QString destination);
-        
-        public slots:
-        
-        void buttonBoxClicked(QAbstractButton* button);
-    };
+        class Window: public QMainWindow
+        {
+            Q_OBJECT
+            
+            public:
+            
+            std::map<std::string,QObject*> storage;
+            
+            Action m_action;
+            QString m_destination;
+            QString m_name;
+            
+            Window(Action action,QString destination);
+            
+            public slots:
+            
+            void timeout();
+            void buttonBoxClicked(QAbstractButton* button);
+        };
+    }
 }
 
 #endif

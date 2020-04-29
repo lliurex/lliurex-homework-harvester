@@ -9,6 +9,10 @@ find_package(KF5CoreAddons REQUIRED)
 find_package(KF5KIO REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets)
 
+find_package(EdupalsBase REQUIRED)
+find_package(EdupalsN4D REQUIRED)
+find_package(EdupalsN4DAgent REQUIRED)
+
 include(KDEInstallDirs)
 
 kcoreaddons_add_plugin(harvesterteacherplugin SOURCES harvesterteacherplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
@@ -25,7 +29,7 @@ add_executable(llx-homework-student studentapp.cpp studentwindow.cpp studentfram
 target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets)
 
 add_executable(llx-homework-teacher teacherapp.cpp teacherwindow.cpp)
-target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets)
+target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets Edupals::Base Edupals::N4D Edupals::N4D::Agent)
 
 
 add_custom_target(
