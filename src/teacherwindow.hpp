@@ -20,6 +20,8 @@
 #ifndef HARVESTER_TEACHER_WINDOW
 #define HARVESTER_TEACHER_WINDOW
 
+#include <agent.hpp>
+
 #include <QMainWindow>
 #include <QDialogButtonBox>
 
@@ -41,6 +43,8 @@ namespace harvester
             Q_OBJECT
             
             public:
+            
+            edupals::n4d::agent::LoginDialog* login;
             
             std::map<std::string,QObject*> storage;
             

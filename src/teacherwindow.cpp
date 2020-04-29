@@ -36,6 +36,7 @@
 #include <iostream>
 
 using namespace harvester;
+using namespace edupals::n4d::agent;
 using namespace std;
 
 teacher::Window::Window(Action action,QString destination) : QMainWindow()
@@ -143,7 +144,17 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
 
 void teacher::Window::timeout()
 {
-    qDebug()<<"tic toc";
+    if (login->ready()) {
+        
+        Ticket ticket = login->value();
+        static_cast<QTimer*>(storage["timer"])->stop();
+        
+        if (ticket.valid()) {
+            clog<<ticket.credential.key.value<<endl;
+        }
+        
+        delete login;
+    }
 }
 
 void teacher::Window::buttonBoxClicked(QAbstractButton* button)
@@ -154,6 +165,10 @@ void teacher::Window::buttonBoxClicked(QAbstractButton* button)
     
     if (button==storage["btnAction"]) {
         button->setEnabled(false);
+        
+        login = new LoginDialog();
+        login->run();
+        
         static_cast<QTimer*>(storage["timer"])->start(1000);
     }
     
