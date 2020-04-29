@@ -28,17 +28,20 @@
 
 namespace harvester
 {
-    class StudentWindow: public QMainWindow
+    namespace student
     {
-        Q_OBJECT
-        
-        public:
-        
-        std::map<std::string,QObject*> storage;
-        
-        StudentWindow(QStringList files);
-        
-    };
+        class Window: public QMainWindow
+        {
+            Q_OBJECT
+            
+            public:
+            
+            std::map<std::string,QObject*> storage;
+            
+            Window(QStringList files);
+            
+        };
+    }
 }
 
 #endif

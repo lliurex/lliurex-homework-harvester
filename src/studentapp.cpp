@@ -42,7 +42,7 @@ int main(int argc,char* argv[])
     
     parser.process(app);
     
-    StudentWindow win(parser.positionalArguments());
+    student::Window win(parser.positionalArguments());
     
     app.exec();
     

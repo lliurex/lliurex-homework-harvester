@@ -36,7 +36,7 @@
 using namespace harvester;
 using namespace std;
 
-StudentWindow::StudentWindow(QStringList files) : QMainWindow()
+student::Window::Window(QStringList files) : QMainWindow()
 {
     setWindowTitle("Send files to teacher");
     setWindowIcon(QIcon::fromTheme("folder-public"));

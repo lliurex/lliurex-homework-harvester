@@ -152,6 +152,9 @@ void teacher::Window::timeout()
         if (ticket.valid()) {
             clog<<ticket.credential.key.value<<endl;
         }
+        else {
+            static_cast<QAbstractButton*>(storage["btnAction"])->setEnabled(true);
+        }
         
         delete login;
     }
