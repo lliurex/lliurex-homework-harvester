@@ -58,6 +58,10 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     setFixedSize(QSize(400, 300));
     setWindowFlags(Qt::Dialog);
     
+    QStackedWidget* stackFrame = new QStackedWidget();
+    setCentralWidget(stackFrame);
+    storage["stack"]=stackFrame;
+    
     QFrame* mainFrame;
     QVBoxLayout* mainLayout;
     
@@ -76,7 +80,7 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     mainFrame = new QFrame();
     mainLayout = new QVBoxLayout();
     mainFrame->setLayout(mainLayout);
-    setCentralWidget(mainFrame);
+    stackFrame->addWidget(mainFrame);
     
     QLabel* message = new QLabel(descriptionMessage);
     message->setAlignment(Qt::AlignCenter);
@@ -135,6 +139,27 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     
     btnAction->setFocus();
     
+    // secondary Frame
+    QFrame* secondaryFrame;
+    QVBoxLayout* secondaryLayout;
+    
+    secondaryFrame = new QFrame();
+    secondaryLayout = new QVBoxLayout();
+    secondaryFrame->setLayout(secondaryLayout);
+    
+    stackFrame->addWidget(secondaryFrame);
+    
+    QLabel* lblStatus = new QLabel("All went ok!");
+    lblStatus->setAlignment(Qt::AlignCenter);
+    secondaryLayout->addWidget(lblStatus);
+    
+    buttonBox = new QDialogButtonBox();
+    btnClose=buttonBox->addButton(QDialogButtonBox::Close);
+    connect(buttonBox,&QDialogButtonBox::clicked, this, [this](){
+        this->close();
+    });
+    secondaryLayout->addWidget(buttonBox);
+    
     QTimer* timer=new QTimer();
     storage["timer"]=timer;
     connect(timer, &QTimer::timeout, this, &teacher::Window::timeout);
@@ -151,6 +176,8 @@ void teacher::Window::timeout()
         
         if (ticket.valid()) {
             clog<<ticket.credential.key.value<<endl;
+            static_cast<QStackedWidget*>(storage["stack"])->setCurrentIndex(1);
+
         }
         else {
             static_cast<QAbstractButton*>(storage["btnAction"])->setEnabled(true);
