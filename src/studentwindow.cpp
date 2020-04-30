@@ -107,13 +107,31 @@ student::Window::Window(QStringList files) : QMainWindow()
     QTimer *timer = new QTimer(this);
     storage["frame2.timer"]=timer;
     
+    int k=0;
     connect(timer,&QTimer::timeout,[=]()mutable {
+        k++;
         imgId++;
         imgId=imgId%4;
         QPixmap px(images[imgId]);
         lbl->setPixmap(px);
+        
+        //HACK
+        if (k>20) {
+            stack->setCurrentIndex(2);
+        }
     });
     
+    //Frame 3
+    QFrame* frame3 = new QFrame();
+    vlayout = new QVBoxLayout();
+    frame3->setLayout(vlayout);
+    lbl=new QLabel("Done!");
+    
+    lbl->setAlignment(Qt::AlignCenter);
+    vlayout->addWidget(lbl);
+    stack->addWidget(frame3);
+    
+    //ButtonBox
     QDialogButtonBox* buttonBox;
     buttonBox = new QDialogButtonBox();
     QAbstractButton* btnClose;
