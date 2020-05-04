@@ -24,9 +24,11 @@
 
 #include <QMainWindow>
 #include <QDialogButtonBox>
+#include <QTimer>
 
 #include <string>
 #include <map>
+#include <future>
 
 namespace harvester
 {
@@ -37,24 +39,54 @@ namespace harvester
             Add,
             Delete
         };
-    
+        
+        enum class Step
+        {
+            None,
+            WaitLogin,
+            WaitN4DCall
+        };
+        
+        struct Task
+        {
+            Action action;
+            edupals::n4d::agent::Ticket ticket;
+            std::string destination;
+            std::string name;
+        };
+        
         class Window: public QMainWindow
         {
             Q_OBJECT
             
             public:
             
+            edupals::n4d::Client m_n4d;
+            edupals::n4d::agent::Ticket m_ticket;
+
+            std::future<int> m_ret;
+            
             edupals::n4d::agent::LoginDialog* login;
             
             std::map<std::string,QObject*> storage;
             
             Action m_action;
+            Step m_step;
+            
             QString m_destination;
             QString m_name;
             
-            Window(Action action,QString destination);
+            QTimer* timer;
             
-            public slots:
+            Window(Action action,QString destination);
+            ~Window();
+            
+            /*
+             * Asynchronous execution of n4d tasks
+             */
+            int performN4D(Task task);
+            
+            std::string getIP();
             
             void timeout();
             void buttonBoxClicked(QAbstractButton* button);

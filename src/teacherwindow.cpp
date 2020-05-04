@@ -34,14 +34,25 @@
 #include <QTimer>
 
 #include <iostream>
+#include <thread>
+#include <future>
 
 using namespace harvester;
+using namespace edupals;
+using namespace edupals::variant;
 using namespace edupals::n4d::agent;
 using namespace std;
 
 teacher::Window::Window(Action action,QString destination) : QMainWindow()
 {
     m_action=action;
+    m_step=Step::None;
+    
+    //TODO:Must point to server
+    m_n4d = n4d::Client("https://localhost",9779);
+
+    Variant ret = m_n4d.call("TeacherShareManager","get_paths");
+    clog<<ret<<endl;
     
     QFileInfo info(destination);
     
@@ -149,7 +160,7 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     
     stackFrame->addWidget(secondaryFrame);
     
-    QLabel* lblStatus = new QLabel("All went ok!");
+    QLabel* lblStatus = new QLabel("In progres...");
     lblStatus->setAlignment(Qt::AlignCenter);
     secondaryLayout->addWidget(lblStatus);
     
@@ -160,30 +171,109 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     });
     secondaryLayout->addWidget(buttonBox);
     
-    QTimer* timer=new QTimer();
+    timer=new QTimer();
     storage["timer"]=timer;
     connect(timer, &QTimer::timeout, this, &teacher::Window::timeout);
+    timer->start(500);
     
     show();
 }
 
+teacher::Window::~Window()
+{
+    delete timer;
+}
+
+int teacher::Window::performN4D(teacher::Task task)
+{
+    getIP();
+    
+    n4d::Client client(task.ticket.address,
+                    task.ticket.port,
+                    task.ticket.credential.user,
+                    task.ticket.credential.key
+    );
+    
+    variant::Variant ret;
+    
+    switch (task.action) {
+        case Action::Add:
+            ret = client.call("TeacherShareManager","add_path",
+                              { task.ticket.credential.user,
+                task.destination,
+                task.name }
+            );
+            
+            clog<<ret<<endl;
+        break;
+        
+        case Action::Delete:
+        break;
+    }
+    
+    //std::this_thread::sleep_for(std::chrono::milliseconds(6000));
+    
+    return 0;
+}
+
+string teacher::Window::getIP()
+{
+    /* localhost client */
+    n4d::Client client;
+    variant::Variant ret;
+    
+    ret = client.call("VariablesManager","get_variable",{"CLIENT_INTERNAL_INTERFACE"});
+    
+    if (ret.none()) {
+        ret = client.call("VariablesManager","get_variable",{"INTERNAL_INTERFACE"});
+    }
+    
+    clog<<"iface:"<<ret<<endl;
+    
+    ret = client.rpc_call("get_ip",{"wlan0"});
+    
+    clog<<"ip: "<<ret<<endl;
+    
+    return "";
+}
+
 void teacher::Window::timeout()
 {
-    if (login->ready()) {
-        
-        Ticket ticket = login->value();
-        static_cast<QTimer*>(storage["timer"])->stop();
-        
-        if (ticket.valid()) {
-            clog<<ticket.credential.key.value<<endl;
-            static_cast<QStackedWidget*>(storage["stack"])->setCurrentIndex(1);
+    switch (m_step) {
+        case Step::WaitLogin:
+            if (login->ready()) {
+                
+                m_step = Step::None;
+                m_ticket = login->value();
+                
+                if (m_ticket.valid()) {
+                    m_step = Step::WaitN4DCall;
+                    
+                    teacher::Task task;
+                    task.action=m_action;
+                    task.ticket=m_ticket;
+                    task.destination=m_destination.toStdString();
+                    task.name=m_name.toStdString();
+                    m_ret = std::async(&teacher::Window::performN4D,this,task);
+                    
+                    static_cast<QStackedWidget*>(storage["stack"])->setCurrentIndex(1);
 
-        }
-        else {
-            static_cast<QAbstractButton*>(storage["btnAction"])->setEnabled(true);
-        }
+                }
+                else {
+                    static_cast<QAbstractButton*>(storage["btnAction"])->setEnabled(true);
+                }
+                
+                delete login;
+            }
+        break;
         
-        delete login;
+        case Step::WaitN4DCall:
+            
+            if (m_ret.wait_for(std::chrono::milliseconds(50))==std::future_status::ready) {
+                clog<<"Cal ret:"<<m_ret.get()<<endl;
+                m_step=Step::None;
+            }
+        break;
     }
 }
 
@@ -198,8 +288,9 @@ void teacher::Window::buttonBoxClicked(QAbstractButton* button)
         
         login = new LoginDialog();
         login->run();
-        
-        static_cast<QTimer*>(storage["timer"])->start(1000);
+        m_step = Step::WaitLogin;
+        //std::async(std::launch::deferred,&teacher::Window::waitLogin,this);
+        //worker = std::thread(&teacher::Window::waitLogin,this);
     }
     
 }
