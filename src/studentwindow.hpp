@@ -30,16 +30,26 @@ namespace harvester
 {
     namespace student
     {
+        enum class Step
+        {
+            None,
+            Load,
+            Send
+        };
+        
         class Window: public QMainWindow
         {
             Q_OBJECT
             
             public:
             
+            Step m_step;
+            
             std::map<std::string,QObject*> storage;
             
             Window(QStringList files);
             
+            void pulse();
         };
     }
 }

@@ -48,12 +48,6 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     m_action=action;
     m_step=Step::None;
     
-    //TODO:Must point to server
-    m_n4d = n4d::Client("https://localhost",9779);
-
-    Variant ret = m_n4d.call("TeacherShareManager","get_paths");
-    clog<<ret<<endl;
-    
     QFileInfo info(destination);
     
     qDebug()<<"1 "<<destination;
@@ -161,6 +155,7 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     stackFrame->addWidget(secondaryFrame);
     
     QLabel* lblStatus = new QLabel("In progres...");
+    storage["lblStatus"]=lblStatus;
     lblStatus->setAlignment(Qt::AlignCenter);
     secondaryLayout->addWidget(lblStatus);
     
@@ -173,7 +168,7 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     
     timer=new QTimer();
     storage["timer"]=timer;
-    connect(timer, &QTimer::timeout, this, &teacher::Window::timeout);
+    connect(timer, &QTimer::timeout, this, &teacher::Window::pulse);
     timer->start(500);
     
     show();
@@ -186,7 +181,7 @@ teacher::Window::~Window()
 
 int teacher::Window::performN4D(teacher::Task task)
 {
-    getIP();
+    std::string ipaddr=getIP();
     
     n4d::Client client(task.ticket.address,
                     task.ticket.port,
@@ -201,7 +196,9 @@ int teacher::Window::performN4D(teacher::Task task)
             ret = client.call("TeacherShareManager","add_path",
                               { task.ticket.credential.user,
                 task.destination,
-                task.name }
+                task.name,
+                ipaddr,
+                0}
             );
             
             clog<<ret<<endl;
@@ -234,10 +231,10 @@ string teacher::Window::getIP()
     
     clog<<"ip: "<<ret<<endl;
     
-    return "";
+    return ret.get_string();
 }
 
-void teacher::Window::timeout()
+void teacher::Window::pulse()
 {
     switch (m_step) {
         case Step::WaitLogin:

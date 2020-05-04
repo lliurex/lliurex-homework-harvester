@@ -20,6 +20,8 @@
 #include "studentwindow.hpp"
 #include "ui_studentframe1.h"
 
+#include <n4d.hpp>
+
 #include <QFileDialog>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
@@ -34,10 +36,19 @@
 #include <iostream>
 
 using namespace harvester;
+using namespace edupals;
 using namespace std;
 
 student::Window::Window(QStringList files) : QMainWindow()
 {
+    m_step = Step::None;
+    
+    n4d::Client client;
+    variant::Variant ret;
+    
+    ret=client.call("TeacherShareManager","get_paths");
+    clog<<ret<<endl;
+    
     setWindowTitle("Send files to teacher");
     setWindowIcon(QIcon::fromTheme("folder-public"));
     setFixedSize(QSize(400, 550));
@@ -82,7 +93,7 @@ student::Window::Window(QStringList files) : QMainWindow()
     
     //frame 2
     int imgId=0;
-    const QString images[4]={"://wait00.svg","://wait01.svg","://wait02.svg","://wait03.svg"};
+    
 
     QFrame* frame2 = new QFrame();
     QVBoxLayout*vlayout = new QVBoxLayout();
@@ -92,7 +103,7 @@ student::Window::Window(QStringList files) : QMainWindow()
     
     lbl->setAlignment(Qt::AlignCenter);
     vlayout->addWidget(lbl);
-    QPixmap px(images[0]);
+    QPixmap px("://wait00.svg");
     lbl = new QLabel();
     
     storage["frame2.image"]=lbl;
@@ -105,21 +116,9 @@ student::Window::Window(QStringList files) : QMainWindow()
     stack->addWidget(frame2);
     
     QTimer *timer = new QTimer(this);
-    storage["frame2.timer"]=timer;
-    
-    int k=0;
-    connect(timer,&QTimer::timeout,[=]()mutable {
-        k++;
-        imgId++;
-        imgId=imgId%4;
-        QPixmap px(images[imgId]);
-        lbl->setPixmap(px);
-        
-        //HACK
-        if (k>20) {
-            stack->setCurrentIndex(2);
-        }
-    });
+    storage["timer"]=timer;
+    timer->start(500);
+    connect(timer, &QTimer::timeout, this, &student::Window::pulse);
     
     //Frame 3
     QFrame* frame3 = new QFrame();
@@ -145,9 +144,8 @@ student::Window::Window(QStringList files) : QMainWindow()
         }
         
         if (button==btnSend) {
-            qDebug()<<"sending files...";
             stack->setCurrentIndex(1);
-            timer->start(500);
+            m_step=Step::Send;
             btnSend->hide();
         }
     });
@@ -155,4 +153,28 @@ student::Window::Window(QStringList files) : QMainWindow()
     mainLayout->addWidget(buttonBox);
     
     show();
+}
+
+void student::Window::pulse()
+{
+    
+    QLabel* label;
+    static int imgIndex=0;
+    static const QString images[4]={"://wait00.svg","://wait01.svg","://wait02.svg","://wait03.svg"};
+    
+    static QPixmap px;
+    
+    switch (m_step) {
+        case Step::Load:
+            
+        break;
+        
+        case Step::Send:
+            imgIndex++;
+            imgIndex=imgIndex%4;
+            label = static_cast<QLabel*>(storage["frame2.image"]);
+            px=QPixmap(images[imgIndex]);
+            label->setPixmap(px);
+        break;
+    }
 }

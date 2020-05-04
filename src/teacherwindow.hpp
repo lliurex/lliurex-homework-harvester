@@ -88,7 +88,7 @@ namespace harvester
             
             std::string getIP();
             
-            void timeout();
+            void pulse();
             void buttonBoxClicked(QAbstractButton* button);
         };
     }
