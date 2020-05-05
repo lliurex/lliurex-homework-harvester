@@ -22,6 +22,9 @@
 
 #include <QMainWindow>
 #include <QStringList>
+#include <QListWidget>
+#include <QStackedWidget>
+#include <QLabel>
 
 #include <string>
 #include <map>
@@ -46,6 +49,10 @@ namespace harvester
             
             Step m_step;
             std::future<int> m_ret;
+            
+            QStackedWidget* m_stack;
+            QListWidget* m_listTeachers;
+            QLabel* m_lblImage;
             
             std::map<std::string,QObject*> storage;
             

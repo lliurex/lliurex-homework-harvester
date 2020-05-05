@@ -28,7 +28,6 @@
 #include <QFrame>
 #include <QDialogButtonBox>
 #include <QPushButton>
-#include <QStackedWidget>
 #include <QImage>
 #include <QDebug>
 #include <QTimer>
@@ -42,6 +41,7 @@ using namespace std;
 student::Window::Window(QStringList files) : QMainWindow()
 {
     m_step = Step::Load;
+    QApplication::setOverrideCursor(Qt::BusyCursor);
     m_ret = std::async(&student::Window::loadPaths,this);
     
     setWindowTitle("Send files to teacher");
@@ -57,17 +57,16 @@ student::Window::Window(QStringList files) : QMainWindow()
     mainFrame->setLayout(mainLayout);
     setCentralWidget(mainFrame);
     
-    QStackedWidget* stack=new QStackedWidget();
-    storage["stack"]=stack;
-    mainLayout->addWidget(stack);
+    m_stack=new QStackedWidget();
+    mainLayout->addWidget(m_stack);
     
     //frame 1
     Ui::frame1* frame1 = new Ui::frame1();
     QFrame* container = new QFrame();
     frame1->setupUi(container);
-    stack->addWidget(container);
+    m_stack->addWidget(container);
     
-    storage["listTeachers"]=frame1->listTeachers;
+    m_listTeachers=frame1->listTeachers;
     
     for (auto f:files) {
         frame1->listFiles->addItem(f);
@@ -92,7 +91,6 @@ student::Window::Window(QStringList files) : QMainWindow()
     //frame 2
     int imgId=0;
     
-
     QFrame* frame2 = new QFrame();
     QVBoxLayout*vlayout = new QVBoxLayout();
     frame2->setLayout(vlayout);
@@ -101,17 +99,15 @@ student::Window::Window(QStringList files) : QMainWindow()
     
     lbl->setAlignment(Qt::AlignCenter);
     vlayout->addWidget(lbl);
-    QPixmap px("://wait00.svg");
     lbl = new QLabel();
     
-    storage["frame2.image"]=lbl;
-    lbl->setPixmap(px);
+    m_lblImage=lbl;
     lbl->setAlignment(Qt::AlignCenter);
     vlayout->addWidget(lbl);
     
     vlayout->addStretch(1);
     
-    stack->addWidget(frame2);
+    m_stack->addWidget(frame2);
     
     QTimer *timer = new QTimer(this);
     storage["timer"]=timer;
@@ -126,7 +122,7 @@ student::Window::Window(QStringList files) : QMainWindow()
     
     lbl->setAlignment(Qt::AlignCenter);
     vlayout->addWidget(lbl);
-    stack->addWidget(frame3);
+    m_stack->addWidget(frame3);
     
     //ButtonBox
     QDialogButtonBox* buttonBox;
@@ -135,6 +131,7 @@ student::Window::Window(QStringList files) : QMainWindow()
     QAbstractButton* btnSend;
     btnClose=buttonBox->addButton(QDialogButtonBox::Close);
     btnSend=buttonBox->addButton("send",QDialogButtonBox::ActionRole);
+    btnSend->setEnabled(false);
     
     connect(buttonBox,&QDialogButtonBox::clicked, [=](QAbstractButton* button) {
         if (button==btnClose) {
@@ -142,14 +139,14 @@ student::Window::Window(QStringList files) : QMainWindow()
         }
         
         if (button==btnSend) {
-            stack->setCurrentIndex(1);
+            m_stack->setCurrentIndex(1);
             m_step=Step::Send;
             btnSend->hide();
         }
     });
     
     mainLayout->addWidget(buttonBox);
-    stack->setCurrentIndex(1);
+    m_stack->setCurrentIndex(1);
     
     show();
 }
@@ -162,6 +159,7 @@ int student::Window::loadPaths()
     ret=client.call("TeacherShareManager","get_paths");
     
     if (ret.type()==variant::Type::Struct) {
+        clog<<ret<<endl;
         vector<string> keys = ret.keys();
         
         //Better in a mutex!
@@ -175,35 +173,35 @@ int student::Window::loadPaths()
         return 1;
     }
     
-    std::this_thread::sleep_for(std::chrono::milliseconds(6000));
-    
     return 0;
 }
 
 void student::Window::pulse()
 {
     
-    QLabel* label;
     static int imgIndex=0;
     static const QString images[4]={"://wait00.svg","://wait01.svg","://wait02.svg","://wait03.svg"};
     
     static QPixmap px;
     
-    QListWidget* list;
-    
     switch (m_step) {
         case Step::Load:
             if (m_ret.wait_for(chrono::milliseconds(50))==std::future_status::ready) {
                 m_step=Step::None;
-                static_cast<QStackedWidget*>(storage["stack"])->setCurrentIndex(0);
-                list = static_cast<QListWidget*>(storage["listTeachers"]);
+                QApplication::restoreOverrideCursor();
+                m_stack->setCurrentIndex(0);
                 
-                list->reset();
+                
+                m_listTeachers->reset();
                 if (m_ret.get()==0) {
                     
                     for (auto p: paths) {
-                        list->addItem(QString::fromStdString(p));
+                        m_listTeachers->addItem(QString::fromStdString(p));
                     }
+                }
+                else {
+                    //ToDo: dialog error?
+                    cerr<<"Failed to retrieve paths from n4d server"<<endl;
                 }
             }
         break;
@@ -211,9 +209,8 @@ void student::Window::pulse()
         case Step::Send:
             imgIndex++;
             imgIndex=imgIndex%4;
-            label = static_cast<QLabel*>(storage["frame2.image"]);
             px=QPixmap(images[imgIndex]);
-            label->setPixmap(px);
+            m_lblImage->setPixmap(px);
         break;
     }
 }

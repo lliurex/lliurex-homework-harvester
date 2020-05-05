@@ -110,9 +110,10 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
         
         QLineEdit* txtName = new QLineEdit(m_name);
         txtName->setAlignment(Qt::AlignCenter);
-        connect(txtName,&QLineEdit::editingFinished, [stack,btnName,txtName]() mutable {
+        connect(txtName,&QLineEdit::editingFinished, [=]() mutable {
             btnName->setText(txtName->text());
             stack->setCurrentIndex(0);
+            m_destination=txtName->text();
         });
         
         stack->addWidget(txtName);
@@ -256,6 +257,8 @@ void teacher::Window::pulse()
                     task.ticket=m_ticket;
                     task.destination=m_destination.toStdString();
                     task.name=m_name.toStdString();
+                    clog<<"name "<<task.name<<endl;
+                    clog<<"path "<<task.destination<<endl;
                     m_ret = std::async(&teacher::Window::performN4D,this,task);
                     
                     static_cast<QStackedWidget*>(storage["stack"])->setCurrentIndex(1);
