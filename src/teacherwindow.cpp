@@ -201,7 +201,12 @@ int teacher::Window::performN4D(teacher::Task task)
                 0}
             );
             
-            clog<<ret<<endl;
+            if (ret.type()==variant::Type::Boolean and ret.get_boolean()==true) {
+                return 0;
+            }
+            else {
+                return 1;
+            }
         break;
         
         case Action::Delete:

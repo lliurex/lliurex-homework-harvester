@@ -25,6 +25,7 @@
 
 #include <string>
 #include <map>
+#include <future>
 
 namespace harvester
 {
@@ -44,12 +45,18 @@ namespace harvester
             public:
             
             Step m_step;
+            std::future<int> m_ret;
             
             std::map<std::string,QObject*> storage;
             
+            //hack
+            std::vector<std::string> paths;
+            
             Window(QStringList files);
             
+            int loadPaths();
             void pulse();
+            
         };
     }
 }

@@ -41,13 +41,8 @@ using namespace std;
 
 student::Window::Window(QStringList files) : QMainWindow()
 {
-    m_step = Step::None;
-    
-    n4d::Client client;
-    variant::Variant ret;
-    
-    ret=client.call("TeacherShareManager","get_paths");
-    clog<<ret<<endl;
+    m_step = Step::Load;
+    m_ret = std::async(&student::Window::loadPaths,this);
     
     setWindowTitle("Send files to teacher");
     setWindowIcon(QIcon::fromTheme("folder-public"));
@@ -63,6 +58,7 @@ student::Window::Window(QStringList files) : QMainWindow()
     setCentralWidget(mainFrame);
     
     QStackedWidget* stack=new QStackedWidget();
+    storage["stack"]=stack;
     mainLayout->addWidget(stack);
     
     //frame 1
@@ -70,6 +66,8 @@ student::Window::Window(QStringList files) : QMainWindow()
     QFrame* container = new QFrame();
     frame1->setupUi(container);
     stack->addWidget(container);
+    
+    storage["listTeachers"]=frame1->listTeachers;
     
     for (auto f:files) {
         frame1->listFiles->addItem(f);
@@ -99,7 +97,7 @@ student::Window::Window(QStringList files) : QMainWindow()
     QVBoxLayout*vlayout = new QVBoxLayout();
     frame2->setLayout(vlayout);
     QLabel* lbl;
-    lbl=new QLabel("Sending files...");
+    lbl=new QLabel("Loading...");
     
     lbl->setAlignment(Qt::AlignCenter);
     vlayout->addWidget(lbl);
@@ -151,8 +149,35 @@ student::Window::Window(QStringList files) : QMainWindow()
     });
     
     mainLayout->addWidget(buttonBox);
+    stack->setCurrentIndex(1);
     
     show();
+}
+
+int student::Window::loadPaths()
+{
+    n4d::Client client;
+    variant::Variant ret;
+    
+    ret=client.call("TeacherShareManager","get_paths");
+    
+    if (ret.type()==variant::Type::Struct) {
+        vector<string> keys = ret.keys();
+        
+        //Better in a mutex!
+        this->paths.clear();
+        
+        for (auto k:keys) {
+            this->paths.push_back(k);
+        }
+    }
+    else {
+        return 1;
+    }
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(6000));
+    
+    return 0;
 }
 
 void student::Window::pulse()
@@ -164,9 +189,23 @@ void student::Window::pulse()
     
     static QPixmap px;
     
+    QListWidget* list;
+    
     switch (m_step) {
         case Step::Load:
-            
+            if (m_ret.wait_for(chrono::milliseconds(50))==std::future_status::ready) {
+                m_step=Step::None;
+                static_cast<QStackedWidget*>(storage["stack"])->setCurrentIndex(0);
+                list = static_cast<QListWidget*>(storage["listTeachers"]);
+                
+                list->reset();
+                if (m_ret.get()==0) {
+                    
+                    for (auto p: paths) {
+                        list->addItem(QString::fromStdString(p));
+                    }
+                }
+            }
         break;
         
         case Step::Send:
