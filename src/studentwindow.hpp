@@ -25,6 +25,8 @@
 #include <QListWidget>
 #include <QStackedWidget>
 #include <QLabel>
+#include <QTimer>
+#include <QPushButton>
 
 #include <string>
 #include <map>
@@ -50,9 +52,12 @@ namespace harvester
             Step m_step;
             std::future<int> m_ret;
             
+            QTimer* m_timer;
             QStackedWidget* m_stack;
             QListWidget* m_listTeachers;
             QLabel* m_lblImage;
+            QAbstractButton* m_btnClose;
+            QAbstractButton* m_btnSend;
             
             std::map<std::string,QObject*> storage;
             
@@ -60,8 +65,10 @@ namespace harvester
             std::vector<std::string> paths;
             
             Window(QStringList files);
+            ~Window();
             
             int loadPaths();
+            int send();
             void pulse();
             
         };

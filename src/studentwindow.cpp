@@ -27,7 +27,6 @@
 #include <QVBoxLayout>
 #include <QFrame>
 #include <QDialogButtonBox>
-#include <QPushButton>
 #include <QImage>
 #include <QDebug>
 #include <QTimer>
@@ -109,46 +108,47 @@ student::Window::Window(QStringList files) : QMainWindow()
     
     m_stack->addWidget(frame2);
     
-    QTimer *timer = new QTimer(this);
-    storage["timer"]=timer;
-    timer->start(500);
-    connect(timer, &QTimer::timeout, this, &student::Window::pulse);
-    
-    //Frame 3
-    QFrame* frame3 = new QFrame();
-    vlayout = new QVBoxLayout();
-    frame3->setLayout(vlayout);
-    lbl=new QLabel("Done!");
-    
-    lbl->setAlignment(Qt::AlignCenter);
-    vlayout->addWidget(lbl);
-    m_stack->addWidget(frame3);
+    m_timer = new QTimer(this);
+    m_timer->start(500);
+    connect(m_timer, &QTimer::timeout, this, &student::Window::pulse);
     
     //ButtonBox
     QDialogButtonBox* buttonBox;
     buttonBox = new QDialogButtonBox();
-    QAbstractButton* btnClose;
-    QAbstractButton* btnSend;
-    btnClose=buttonBox->addButton(QDialogButtonBox::Close);
-    btnSend=buttonBox->addButton("send",QDialogButtonBox::ActionRole);
-    btnSend->setEnabled(false);
+
+    m_btnClose=buttonBox->addButton(QDialogButtonBox::Close);
+    m_btnSend=buttonBox->addButton("send",QDialogButtonBox::ActionRole);
+    m_btnSend->setEnabled(false);
     
     connect(buttonBox,&QDialogButtonBox::clicked, [=](QAbstractButton* button) {
-        if (button==btnClose) {
+        if (button==m_btnClose) {
             this->close();
         }
         
-        if (button==btnSend) {
+        if (button==m_btnSend) {
             m_stack->setCurrentIndex(1);
             m_step=Step::Send;
-            btnSend->hide();
+            m_btnSend->hide();
+            
+            m_ret = std::async(&student::Window::send,this);
         }
     });
     
     mainLayout->addWidget(buttonBox);
+    
+    connect(m_listTeachers,&QListWidget::itemSelectionChanged,[=](){
+        qDebug()<<m_listTeachers->currentItem()->text();
+        m_btnSend->setEnabled(true);
+    });
+    
     m_stack->setCurrentIndex(1);
     
     show();
+}
+
+student::Window::~Window()
+{
+    delete m_timer;
 }
 
 int student::Window::loadPaths()
@@ -173,6 +173,12 @@ int student::Window::loadPaths()
         return 1;
     }
     
+    return 0;
+}
+
+int student::Window::send()
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(6000));
     return 0;
 }
 
@@ -211,6 +217,13 @@ void student::Window::pulse()
             imgIndex=imgIndex%4;
             px=QPixmap(images[imgIndex]);
             m_lblImage->setPixmap(px);
+            
+            if (m_ret.wait_for(chrono::milliseconds(50))==std::future_status::ready) {
+                if (m_ret.get()==0) {
+                    m_step = Step::None;
+                    clog<<"done"<<endl;
+                }
+            }
         break;
     }
 }
