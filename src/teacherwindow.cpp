@@ -32,6 +32,7 @@
 #include <QLineEdit>
 #include <QDebug>
 #include <QTimer>
+#include <QApplication>
 
 #include <iostream>
 #include <thread>
@@ -155,10 +156,13 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     
     stackFrame->addWidget(secondaryFrame);
     
-    QLabel* lblStatus = new QLabel("In progres...");
-    storage["lblStatus"]=lblStatus;
-    lblStatus->setAlignment(Qt::AlignCenter);
-    secondaryLayout->addWidget(lblStatus);
+    m_lblImage = new QLabel();
+    m_lblImage->setAlignment(Qt::AlignCenter);
+    secondaryLayout->addWidget(m_lblImage);
+    
+    m_lblStatus = new QLabel("In progres...");
+    m_lblStatus->setAlignment(Qt::AlignCenter);
+    secondaryLayout->addWidget(m_lblStatus);
     
     buttonBox = new QDialogButtonBox();
     btnClose=buttonBox->addButton(QDialogButtonBox::Close);
@@ -167,17 +171,16 @@ teacher::Window::Window(Action action,QString destination) : QMainWindow()
     });
     secondaryLayout->addWidget(buttonBox);
     
-    timer=new QTimer();
-    storage["timer"]=timer;
-    connect(timer, &QTimer::timeout, this, &teacher::Window::pulse);
-    timer->start(500);
+    m_timer=new QTimer();
+    connect(m_timer, &QTimer::timeout, this, &teacher::Window::pulse);
+    m_timer->start(500);
     
     show();
 }
 
 teacher::Window::~Window()
 {
-    delete timer;
+    delete m_timer;
 }
 
 int teacher::Window::performN4D(teacher::Task task)
@@ -242,6 +245,8 @@ string teacher::Window::getIP()
 
 void teacher::Window::pulse()
 {
+    QIcon icon;
+    
     switch (m_step) {
         case Step::WaitLogin:
             if (login->ready()) {
@@ -259,6 +264,7 @@ void teacher::Window::pulse()
                     task.name=m_name.toStdString();
                     clog<<"name "<<task.name<<endl;
                     clog<<"path "<<task.destination<<endl;
+                    QApplication::setOverrideCursor(Qt::BusyCursor);
                     m_ret = std::async(&teacher::Window::performN4D,this,task);
                     
                     static_cast<QStackedWidget*>(storage["stack"])->setCurrentIndex(1);
@@ -275,8 +281,20 @@ void teacher::Window::pulse()
         case Step::WaitN4DCall:
             
             if (m_ret.wait_for(std::chrono::milliseconds(50))==std::future_status::ready) {
-                clog<<"Cal ret:"<<m_ret.get()<<endl;
+                
+                if (m_ret.get()==0) {
+                    m_lblStatus->setText("Success!");
+                    icon=QIcon::fromTheme("dialog-positive");
+                    m_lblImage->setPixmap(icon.pixmap(64,64));
+                }
+                else {
+                    m_lblStatus->setText("Error sharing the folder!");
+                    icon=QIcon::fromTheme("dialog-error");
+                    m_lblImage->setPixmap(icon.pixmap(64,64));
+                }
+                
                 m_step=Step::None;
+                QApplication::restoreOverrideCursor();
             }
         break;
     }

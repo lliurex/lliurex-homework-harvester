@@ -25,6 +25,7 @@
 #include <QMainWindow>
 #include <QDialogButtonBox>
 #include <QTimer>
+#include <QLabel>
 
 #include <string>
 #include <map>
@@ -76,7 +77,9 @@ namespace harvester
             QString m_destination;
             QString m_name;
             
-            QTimer* timer;
+            QTimer* m_timer;
+            QLabel* m_lblImage;
+            QLabel* m_lblStatus;
             
             Window(Action action,QString destination);
             ~Window();
