@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # coding = utf-8
 
 import os.path
@@ -9,8 +9,8 @@ import sys
 import getpass
 import locale
 import gettext
-
-from xmlrpclib import *
+import ssl
+import xmlrpc.client
 
 locale.textdomain("lliurex-homework-harvester")
 gettext.textdomain("lliurex-homework-harvester")
@@ -25,7 +25,8 @@ class TeacherSide:
 		self.user=user
 		self.path=path
 		
-		self.server=ServerProxy("https://server:9779")
+		context=ssl._create_unverified_context()
+		self.server=xmlrpc.client.ServerProxy("https://server:9779",context=context)
 		
 		if self.path[len(self.path)-1]!="/":
 			self.path+="/"
@@ -71,21 +72,26 @@ class TeacherSide:
 		
 		try:
 			ret=self.server.is_configured("","TeacherShareManager",self.user,self.path)
-			print ret
+			
 		
-			if type(ret)==type(True):
-				if ret:
+			if ret["status"]==0:
+				if ret["return"]:
 					self.apply_button.hide()
 					self.name_entry.set_sensitive(False)
 					self.msg_label.set_text(_("This folder is already configured to receive homeworks."))
-					path,name,ip,port=self.server.get_paths("","TeacherShareManager")[self.user]
-					self.name_entry.set_text(name)
+					#path,name,ip,port=self.server.get_paths("","TeacherShareManager")[self.user]
+					ret2=self.server.get_paths("","TeachersShareManager")
+					if ret2["status"]==0:
+						path,name,ip,port=ret2["return"][self.user]
+						self.name_entry.set_text(name)
+					else:
+						self.remove_button.hide()
 				else:
 					self.remove_button.hide()
 		except Exception as e:
 			
-			print e
-			self.msg_label.set_text(_("Error connecting to server"))
+			print(e)
+			self.msg_label.set_text(_("Error connecting to server") + ": %s"%str(e))
 			self.apply_button.hide()
 			self.remove_button.hide()
 			self.password_entry.set_sensitive(False)
@@ -131,25 +137,13 @@ class TeacherSide:
 	
 	
 	def get_my_ip(self):
-		'''
-		user_list=self.discover.discover()
-		print user_list
-		for user in user_list:
-			if user==self.user:
-				if user_list[user]!=None:
-					if ":" in user_list[user]:
-						return "server"
-					else:
-						return user_list[user]
-				else:
-					return "server"
-		'''
 
 		try:
-			client=ServerProxy("https://localhost:9779",allow_none=True)
-			eth=client.get_variable("","VariablesManager","CLIENT_INTERNAL_INTERFACE")
+			context=ssl._create_unverified_context()
+			client=xmlrpc.client.ServerProxy("https://localhost:9779",context=context)
+			eth=client.get_variable("CLIENT_INTERNAL_INTERFACE")["return"]
 			if eth==None:
-				eth=client.get_variable("","VariablesManager","INTERNAL_INTERFACE")
+				eth=client.get_variable("INTERNAL_INTERFACE")["return"]
 				
 			return client.get_ip(eth)
 			
@@ -167,10 +161,9 @@ class TeacherSide:
 		
 		if self.ip!=None:
 			user_info=(self.user,self.password_entry.get_text())
-			tmp_server=ServerProxy("https://"+self.ip+":9779")
-			#port=tmp_server.request_socket(user_info,"SocketManager",self.user,True,self.path)
-			#tmp_server.start_socket(user_info,"SocketManager",port)
-			ret=self.server.add_path(user_info,"TeacherShareManager",self.user,self.path,self.name_entry.get_text(),self.ip,0)
+			context=ssl._create_unverified_context()
+			tmp_server=xmlrpc.client.ServerProxy("https://"+self.ip+":9779",context=context)
+			ret=self.server.add_path(user_info,"TeacherShareManager",self.user,self.path,self.name_entry.get_text(),self.ip,0)["return"]
 			#Register user credentials 
 			if ret:
 				tmp_server.register_share_info(user_info,"TeacherShare",user_info[0],user_info[1],self.path)

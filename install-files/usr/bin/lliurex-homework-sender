@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # coding = utf-8
 
 import gtk
@@ -16,7 +16,8 @@ import sys
 import locale
 import gettext
 
-from xmlrpclib import *
+import ssl
+from xmlrpc.Client import *
 
 
 locale.textdomain("lliurex-homework-harvester")
@@ -132,20 +133,27 @@ class SendToTeacher:
 		self.teachers_tv.append_column(name_column)
 
 		try:
-			server = ServerProxy ("https://server:9779")
+			context = ssl._create_unverified_context()
+			server = ServerProxy ("https://server:9779",context=context)
 			
-			self.paths=server.get_paths("","TeacherShareManager")
+			ret=server.get_paths("","TeacherShareManager")
+			if ret["status"]==0
 			
-			self.teachers_store.clear()
+				self.paths=ret["return"]
 			
-			for item in self.paths:
-				path,name,ip,port=self.paths[item]
-				self.teachers_store.append([name,item,ip,port])
+				self.teachers_store.clear()
+				
+				for item in self.paths:
+					path,name,ip,port=self.paths[item]
+					self.teachers_store.append([name,item,ip,port])
+			else:
+				e=Exception(ret["msg"])
+				raise e
 				
 			
 		except Exception as e:
-			print e
-			self.msg_label.set_text("Error connecting to server")
+			print(e)
+			self.msg_label.set_text("Error connecting to server: %s"%str(e))
 
 		
 		glib.timeout_add(5000,self.populate_teachers_tv)
@@ -163,15 +171,17 @@ class SendToTeacher:
 	def populate_teachers_tv(self):
 		
 		
-		
-		
-		
 		self.teachers_store.clear()
 		
 		try:
-			
-			server = ServerProxy ("https://server:9779")
-			self.paths=server.get_paths("","TeacherShareManager")
+			context = ssl._create_unverified_context()
+			server = ServerProxy ("https://server:9779",context)
+			ret=server.get_paths("","TeacherShareManager")
+			if ret["status"]!=0:
+				e=Exception(ret["msg"])
+				raise e
+				
+			self.paths=ret["return"]
 			
 			for item in self.paths:
 				path,name,ip,port=self.paths[item]
@@ -189,8 +199,8 @@ class SendToTeacher:
 			self.msg_label.set_text("")
 			
 			
-		except:
-			self.msg_label.set_text("Error connecting to server")
+		except Exception as e:
+			self.msg_label.set_text("Error connecting to server: %s"%str(e))
 			
 		return True
 		
@@ -266,15 +276,17 @@ class SendToTeacher:
 
 		for item in self.files_store:
 			file_name=item[0]
-			server = ServerProxy ("https://localhost:9779")
+			context = ssl._create_unverified_context()
+			server = ServerProxy ("https://localhost:9779",context=context)
 			try:
 				ret=server.send_to_teacher_net("","TeacherShare",user,teacher,file_name)
-				if type(ret)!=type(True):
-					print ret
+				if ret["status"]!=0:
+					print(ret)
 					ret=False
+					e=Exception(ret["msg"])
 					
 			except Exception as e:
-				print e
+				print(e)
 				self.msg_label.set_text(e.strerror)
 				ret=False
 				f.write(e.strerror+"/n")
