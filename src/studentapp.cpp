@@ -17,14 +17,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "studentwindow.hpp"
+//#include "studentwindow.hpp"
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QQuickView>
 
 #include <iostream>
 
-using namespace harvester;
+//using namespace harvester;
 using namespace std;
 
 int main(int argc,char* argv[])
@@ -42,9 +43,12 @@ int main(int argc,char* argv[])
     
     parser.process(app);
     
-    student::Window win(parser.positionalArguments());
-    
-    app.exec();
-    
-    return 0;
+    //QGuiApplication app(argc, argv);
+
+    QQuickView *view = new QQuickView;
+    view->setSource(QUrl(QStringLiteral("qrc:/student.qml")));
+    view->show();
+    return app.exec();
+    //student::Window win(parser.positionalArguments());
+
 }
