@@ -28,8 +28,8 @@ include(KDEInstallDirs)
 add_executable(llx-homework-student studentapp.cpp ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
 target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets Qt5::Quick)
 
-#add_executable(llx-homework-teacher teacherapp.cpp teacherwindow.cpp)
-#target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets Edupals::Base Edupals::N4D Edupals::N4D::Agent -lpthread)
+add_executable(llx-homework-teacher teacherapp.cpp ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
+target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets Qt5::Quick)
 
 
 add_custom_target(

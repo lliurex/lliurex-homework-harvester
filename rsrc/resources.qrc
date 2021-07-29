@@ -5,5 +5,6 @@
         <file>wait02.svg</file>
         <file>wait03.svg</file>
         <file>student.qml</file>
+        <file>teacher.qml</file>
     </qresource>
 </RCC>
