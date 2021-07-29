@@ -17,15 +17,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "teacherwindow.hpp"
-
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QQuickView>
+#include <QQmlContext>
 #include <QDebug>
 
 #include <iostream>
 
-using namespace harvester;
 using namespace std;
 
 int main(int argc,char* argv[])
@@ -39,35 +38,47 @@ int main(int argc,char* argv[])
     parser.setApplicationDescription("LliureX Homework Harvester teacher gui");
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument("action", "action to do (add | del)");
-    parser.addPositionalArgument("destination", "folder to share");
+    parser.addPositionalArgument("action", "action to do (add | del | manage)");
+    parser.addPositionalArgument("target", "folder to share");
     
     parser.process(app);
     
+    QString action;
+    QString target;
+    
     const QStringList args = parser.positionalArguments();
     
-    if (args.size()<2) {
+    if (args.size()<1) {
         parser.showHelp(0);
     }
     
-    teacher::Action action;
-    
-    if (args[0]=="add") {
-       action=teacher::Action::Add;
+    if (args[0]!="add") {
+         if (args[0]!="del") {
+              if (args[0]!="manage") {
+                cerr<<"Error: expected action: add, del or manage, not "<<args[0].toStdString()<<endl;
+                return 1;
+              }
+         }
     }
-    else {
-        if (args[0]=="del") {
-            action=teacher::Action::Delete;
+    
+    action = args[0];
+    
+    if (args[0]=="add" or args[0]=="del") {
+        if (args.size()<2) {
+            cerr<<"Error: missing target folder"<<endl;
+            return 2;
         }
-        else {
-            cerr<<"Error: expected action: add or del, not "<<args[0].toStdString()<<endl;
-            
-            return 1;
-        }
+        
+        target = args[1];
     }
-    teacher::Window win(action,args[1]);
     
-    app.exec();
+    QQuickView *view = new QQuickView;
+    view->setSource(QUrl(QStringLiteral("qrc:/teacher.qml")));
+    QQmlContext* ctxt = view->rootContext();
+    ctxt->setContextProperty("teacherAction",action);
+    ctxt->setContextProperty("teacherTarget",target);
+    view->show();
     
-    return 0;
+    return app.exec();
+
 }

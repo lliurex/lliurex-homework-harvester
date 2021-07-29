@@ -33,14 +33,13 @@ QQC2.Pane {
                 //address: "https://localhost:9779"
                 //user: "netadmin"
                 showCancel: true
-                trustLocal: true
+                //trustLocal: true
                 message: "Introduce your teacher credentials"
                 //inGroups: ["teachers"]
                 
                 anchors.centerIn: parent
                 
                 onLogged: {
-                    console.log(ticket);
                     stack.push(mainView);
                 }
                 
@@ -60,7 +59,7 @@ QQC2.Pane {
                 QQC2.Label {
                     Layout.alignment: Qt.AlignCenter
                     Layout.fillWidth: true
-                    text: "Added folder"
+                    text: teacherAction+" "+teacherTarget
                 }
                 
                 RowLayout {
