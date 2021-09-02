@@ -15,11 +15,13 @@ QQC2.Pane {
     
     FileDialog {
         id: fileDialog
-        title: "Please choose a file"
+        title: i18nd("lliurex-homework-harvester","Select files");
         folder: shortcuts.home
         onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
-            Qt.quit()
+            for (var n=0;n<fileDialog.fileUrls.length;n++) {
+                alpha.append({name:fileDialog.fileUrls[n]});
+            }
         }
         onRejected: {
             console.log("Canceled")
@@ -105,10 +107,14 @@ QQC2.Pane {
             Layout.fillWidth: true
             
             QQC2.Button {
-                text:"Cancel"
+                text:i18nd("lliurex-homework-harvester","Cancel")
+                
+                onClicked: {
+                    Qt.Quit();
+                }
             }
             QQC2.Button {
-                text:"Send"
+                text:i18nd("lliurex-homework-harvester","Send")
                 
             }
         }
