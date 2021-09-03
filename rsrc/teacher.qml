@@ -34,7 +34,7 @@ QQC2.Pane {
                 //user: "netadmin"
                 showCancel: true
                 //trustLocal: true
-                message: "Introduce your teacher credentials"
+                message: i18nd("lliurex-homework-harvester","Introduce your teacher credentials")
                 //inGroups: ["teachers"]
                 
                 anchors.centerIn: parent
@@ -62,12 +62,21 @@ QQC2.Pane {
                     text: teacherAction+" "+teacherTarget
                 }
                 
+                Kirigami.Icon {
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.minimumWidth: Kirigami.Units.iconSizes.huge
+                    Layout.minimumHeight: width
+                    
+                    source: "folder"
+                    
+                }
+                
                 RowLayout {
                     Layout.alignment: Qt.AlignBottom | Qt.AlignRight
                     Layout.fillWidth: true
                     
                     QQC2.Button {
-                        text: "Add"
+                        text: i18nd("lliurex-homework-harvester",teacherAction)
                         
                         onClicked: {
                             stack.push(waitView);

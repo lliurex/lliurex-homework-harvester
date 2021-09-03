@@ -19,6 +19,7 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QFileInfo>
 #include <QQuickView>
 #include <QQmlContext>
 #include <QDebug>
@@ -70,6 +71,16 @@ int main(int argc,char* argv[])
         }
         
         target = args[1];
+        
+        QFileInfo info(target);
+        
+        if (!info.exists() or !info.isDir()) {
+            cerr<<"Error: target "<<target.toStdString()<<" is not a folder"<<endl;
+            return 3;
+        }
+        else {
+            target=info.absolutePath();
+        }
     }
     
     QQuickView *view = new QQuickView;
