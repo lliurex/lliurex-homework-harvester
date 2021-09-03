@@ -5,13 +5,39 @@ import QtQuick 2.6
 import QtQuick.Controls 2.6 as QQC2
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.0
+import QtQml.Models 2.1
 
 QQC2.Pane {
+    id: mainPane
     
     visible:true
     width: 400
     height: 600
     anchors.centerIn:parent
+    
+    function insertFile(path) {
+        
+        for (var n=0;n<modelFiles.count;n++) {
+            var f=modelFiles.get(n);
+            
+            if (f.path==path) {
+                console.log("File already exists on model");
+                return;
+            }
+        }
+        
+        var name = path.split('/').reverse()[0];
+        modelFiles.append({"name":name,"path":path});
+    }
+    
+    Component.onCompleted: {
+        // HACK
+        modelTeachers.append({"name":"teacher00"});
+        
+        for (var n=0;n<files.length;n++) {
+            insertFile(files[n]);
+        }
+    }
     
     FileDialog {
         id: fileDialog
@@ -20,7 +46,7 @@ QQC2.Pane {
         onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
             for (var n=0;n<fileDialog.fileUrls.length;n++) {
-                alpha.append({name:fileDialog.fileUrls[n]});
+                insertFile(fileDialog.fileUrls[n]);
             }
         }
         onRejected: {
@@ -31,44 +57,33 @@ QQC2.Pane {
     }
     
     ListModel {
-        id: alpha
-            ListElement {
-                name: "file1.png"
-                
-            }
-            ListElement {
-                name: "file2.png"
-                
-            }
+        id: modelFiles
     }
     
     ListModel {
-        id: bravo
-            ListElement {
-                name: "teacher01"
-                
-            }
-            ListElement {
-                name: "teacher03"
-                
-            }
+        id: modelTeachers
     }
     
     ColumnLayout {
         anchors.fill:parent
         
+        QQC2.Label {
+            text: i18nd("lliurex-homework-harvester","Files")
+        }
+        
         ListView {
+            id: listFiles
             //Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
             Layout.preferredWidth: 250
             Layout.preferredHeight: 300
             //Layout.fillHeight: true
             
-            model:alpha
+            model:modelFiles
             highlightFollowsCurrentItem: true
             
             delegate: Kirigami.BasicListItem {
-                label: modelData
+                label: model.name
             }
         }
         
@@ -83,9 +98,18 @@ QQC2.Pane {
                     fileDialog.open();
                 }
             }
+            
             QQC2.Button {
                 text:"-"
+                
+                onClicked: {
+                    modelFiles.remove(listFiles.currentIndex);
+                }
             }
+        }
+        
+        QQC2.Label {
+            text: i18nd("lliurex-homework-harvester","Teacher")
         }
         
         ListView {
@@ -94,11 +118,11 @@ QQC2.Pane {
             Layout.preferredWidth: 250
             Layout.preferredHeight: 100
             
-            model:bravo
+            model:modelTeachers
             highlightFollowsCurrentItem: true
             
             delegate: Kirigami.BasicListItem {
-                label: modelData
+                label: model.name
             }
         }
         

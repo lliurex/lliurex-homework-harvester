@@ -21,7 +21,12 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QFileInfo>
+#include <QList>
+#include <QVariant>
 #include <QQuickView>
+#include <QQmlContext>
+#include <QDebug>
 
 #include <iostream>
 
@@ -43,9 +48,21 @@ int main(int argc,char* argv[])
     
     parser.process(app);
     
-    //QGuiApplication app(argc, argv);
-
     QQuickView *view = new QQuickView;
+    QQmlContext* ctxt = view->rootContext();
+    
+    const QStringList files = parser.positionalArguments();
+    
+    qDebug()<<"Files:";
+    QList<QVariant> absFiles;
+    
+    for (QString name:files) {
+        QFileInfo info(name);
+        qDebug()<<info.absoluteFilePath();
+        absFiles.append(info.absoluteFilePath());
+    }
+    
+    ctxt->setContextProperty("files",absFiles);
     view->setSource(QUrl(QStringLiteral("qrc:/student.qml")));
     view->show();
     return app.exec();
