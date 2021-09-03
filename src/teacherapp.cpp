@@ -20,6 +20,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QFileInfo>
+#include <QDir>
 #include <QQuickView>
 #include <QQmlContext>
 #include <QDebug>
@@ -79,15 +80,18 @@ int main(int argc,char* argv[])
             return 3;
         }
         else {
-            target=info.absolutePath();
+            clog<<"folder:"<<target.toStdString()<<endl;
+            target=info.absoluteFilePath();
+            clog<<"folder:"<<target.toStdString()<<endl;
         }
     }
     
     QQuickView *view = new QQuickView;
-    view->setSource(QUrl(QStringLiteral("qrc:/teacher.qml")));
     QQmlContext* ctxt = view->rootContext();
     ctxt->setContextProperty("teacherAction",action);
     ctxt->setContextProperty("teacherTarget",target);
+    view->setSource(QUrl(QStringLiteral("qrc:/teacher.qml")));
+    
     view->show();
     
     return app.exec();

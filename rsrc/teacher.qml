@@ -12,7 +12,7 @@ QQC2.Pane {
     
     visible:true
     width: 400
-    height: 400
+    height: 360
     anchors.centerIn: parent
     
     QQC2.StackView {
@@ -33,7 +33,7 @@ QQC2.Pane {
                 //address: "https://localhost:9779"
                 //user: "netadmin"
                 showCancel: true
-                //trustLocal: true
+                trustLocal: true
                 message: i18nd("lliurex-homework-harvester","Introduce your teacher credentials")
                 //inGroups: ["teachers"]
                 
@@ -52,23 +52,40 @@ QQC2.Pane {
     
     Component {
         id: mainView
+        
         QQC2.Pane {
+            property string folderName : teacherTarget.split('/').reverse()[0]
+            
             ColumnLayout {
                 anchors.fill:parent
                 
                 QQC2.Label {
-                    Layout.alignment: Qt.AlignCenter
-                    Layout.fillWidth: true
-                    text: teacherAction+" "+teacherTarget
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: false
+                    text: {
+                        if (teacherAction=="add") {
+                            return i18nd("lliurex-homework-harvester","Adding the following folder as destination");
+                        }
+                        
+                        if (teacherAction=="del") {
+                            return i18nd("lliurex-homework-harvester","Removing the following folder as destination");
+                        }
+                    }
                 }
                 
                 Kirigami.Icon {
-                    Layout.alignment: Qt.AlignCenter
+                    Layout.alignment: Qt.AlignHCenter
                     Layout.minimumWidth: Kirigami.Units.iconSizes.huge
                     Layout.minimumHeight: width
                     
                     source: "folder"
                     
+                }
+                
+                QQC2.Label {
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: false
+                    text: folderName
                 }
                 
                 RowLayout {
@@ -84,7 +101,11 @@ QQC2.Pane {
                     }
                     
                     QQC2.Button {
-                        text: "Cancel"
+                        text: i18nd("lliurex-homework-harvester","Cancel")
+                        
+                        onClicked: {
+                            Qt.quit();
+                        }
                     }
                 }
             }
