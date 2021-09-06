@@ -87,6 +87,8 @@ int main(int argc,char* argv[])
     }
     
     QQuickView *view = new QQuickView;
+    view->setMinimumSize(QSize(400,360));
+    view->setMaximumSize(QSize(400,360));
     QQmlContext* ctxt = view->rootContext();
     ctxt->setContextProperty("teacherAction",action);
     ctxt->setContextProperty("teacherTarget",target);

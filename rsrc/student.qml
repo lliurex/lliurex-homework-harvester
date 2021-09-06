@@ -126,9 +126,28 @@ QQC2.Pane {
             }
         }
         
+        Kirigami.InlineMessage {
+            Layout.alignment: Qt.AlignCenter
+            Layout.fillWidth:true
+            Layout.minimumHeight:32
+            
+            id: errorLabel
+            type: Kirigami.MessageType.Error
+        }
+        
         RowLayout {
             Layout.alignment: Qt.AlignRight
             Layout.fillWidth: true
+            
+            QQC2.Button {
+                text:i18nd("lliurex-homework-harvester","Send")
+                
+                onClicked: {
+                    errorLabel.text="No N4D found";
+                    errorLabel.visible=true;
+                }
+                
+            }
             
             QQC2.Button {
                 text:i18nd("lliurex-homework-harvester","Cancel")
@@ -136,10 +155,6 @@ QQC2.Pane {
                 onClicked: {
                     Qt.Quit();
                 }
-            }
-            QQC2.Button {
-                text:i18nd("lliurex-homework-harvester","Send")
-                
             }
         }
         

@@ -49,6 +49,9 @@ int main(int argc,char* argv[])
     parser.process(app);
     
     QQuickView *view = new QQuickView;
+    view->setMinimumSize(QSize(400,600));
+    view->setMaximumSize(QSize(400,600));
+    
     QQmlContext* ctxt = view->rootContext();
     
     const QStringList files = parser.positionalArguments();
