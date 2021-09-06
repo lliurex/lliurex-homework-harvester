@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <user.hpp>
+
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QFileInfo>
@@ -28,6 +30,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace edupals;
 
 int main(int argc,char* argv[])
 {
@@ -92,6 +95,10 @@ int main(int argc,char* argv[])
     QQmlContext* ctxt = view->rootContext();
     ctxt->setContextProperty("teacherAction",action);
     ctxt->setContextProperty("teacherTarget",target);
+    
+    system::User me = system::User::me();
+    ctxt->setContextProperty("userName",QString::fromStdString(me.name));
+    
     view->setSource(QUrl(QStringLiteral("qrc:/teacher.qml")));
     
     view->show();

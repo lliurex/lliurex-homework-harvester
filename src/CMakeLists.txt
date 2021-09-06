@@ -9,7 +9,10 @@ find_package(KF5CoreAddons REQUIRED)
 find_package(KF5KIO REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets Quick)
 
-#find_package(EdupalsBase REQUIRED)
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fexceptions")
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -foperator-names")
+
+find_package(EdupalsBase REQUIRED)
 #find_package(EdupalsN4D REQUIRED)
 #find_package(EdupalsN4DAgent REQUIRED)
 
@@ -29,7 +32,7 @@ add_executable(llx-homework-student studentapp.cpp ${CMAKE_SOURCE_DIR}/rsrc/reso
 target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets Qt5::Quick)
 
 add_executable(llx-homework-teacher teacherapp.cpp ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
-target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets Qt5::Quick)
+target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets Qt5::Quick Edupals::Base)
 
 
 add_custom_target(

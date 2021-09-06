@@ -2,6 +2,8 @@ import Edupals.N4D 1.0 as N4D
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.16 as Kirigami
+import org.kde.kcoreaddons 1.0 as KCoreAddons
+
 
 import QtQuick 2.6
 import QtQuick.Controls 2.6 as QQC2
@@ -14,6 +16,10 @@ QQC2.Pane {
     width: 400
     height: 360
     anchors.centerIn: parent
+    
+    KCoreAddons.KUser {
+        id: kuser
+    }
     
     N4D.Client {
         id: n4d
@@ -65,42 +71,64 @@ QQC2.Pane {
         
         QQC2.Pane {
             
-            GridLayout {
-                rows:3
-                columns:2
+            ColumnLayout {
+                anchors.fill:parent
                 
                 QQC2.Label {
-                    text:i18nd("n4d-qt-agent","User")
-                    //anchors.verticalCenter: userField.verticalCenter
-                    Layout.row:0
-                    Layout.column:0
-                    Layout.alignment: Qt.AlignRight
-                }
-                
-                QQC2.TextField {
-                    id: userField
-                    text:""
-                    focus: true
                     
-                    Layout.row:0
-                    Layout.column:1
+                    text:"homework harvester needs your teacher password to perform this action"
+                    wrapMode:Text.WordWrap
+                    //anchors.verticalCenter: userField.verticalCenter
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth:true
+                }
+                
+                Kirigami.Icon {
+                    Layout.alignment: Qt.AlignCenter 
+                    Layout.minimumWidth: Kirigami.Units.iconSizes.huge
+                    Layout.minimumHeight: width
+                    
+                    source: kuser.faceIconUrl
+                    fallback: "preferences-system-user-sudo"
+                    
                 }
                 
                 QQC2.Label {
-                    text:i18nd("n4d-qt-agent","Password")
-                    Layout.row:1
-                    Layout.column:0
-                    Layout.alignment: Qt.AlignRight
+                    text:userName
+                    Layout.alignment: Qt.AlignHCenter
+                    
                 }
                 
                 QQC2.TextField {
                     id: passwordField
                     echoMode: TextInput.Password
-                    Layout.row:1
-                    Layout.column:1
+                    Layout.alignment: Qt.AlignHCenter
                     
                     onAccepted: {
                         
+                    }
+                }
+                
+                Item {
+                    height:64
+                }
+                
+                RowLayout {
+                    Layout.alignment: Qt.AlignBottom | Qt.AlignRight
+
+                    QQC2.Button {
+                        text: i18nd("lliurex-homework-harvester","Login")
+                        
+                        onClicked: {
+                        }
+                    }
+                    
+                    QQC2.Button {
+                        text: i18nd("lliurex-homework-harvester","Cancel")
+                        
+                        onClicked: {
+                            Qt.quit();
+                        }
                     }
                 }
             }
