@@ -25,6 +25,7 @@
 #include <QDir>
 #include <QQuickView>
 #include <QQmlContext>
+#include <QQmlEngine>
 #include <QDebug>
 
 #include <iostream>
@@ -93,6 +94,7 @@ int main(int argc,char* argv[])
     view->setMinimumSize(QSize(400,360));
     view->setMaximumSize(QSize(400,360));
     QQmlContext* ctxt = view->rootContext();
+    QObject::connect(ctxt->engine(),&QQmlEngine::exit,&app,&QCoreApplication::exit);
     ctxt->setContextProperty("teacherAction",action);
     ctxt->setContextProperty("teacherTarget",target);
     

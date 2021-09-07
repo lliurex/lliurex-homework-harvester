@@ -4,7 +4,6 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.16 as Kirigami
 import org.kde.kcoreaddons 1.0 as KCoreAddons
 
-
 import QtQuick 2.6
 import QtQuick.Controls 2.6 as QQC2
 import QtQuick.Layouts 1.15
@@ -71,6 +70,32 @@ QQC2.Pane {
         
         QQC2.Pane {
             
+            N4D.Client {
+                id: n4dLocal
+                address: "https://localhost:9779"
+                credential: N4D.Client.Password
+                user: userName
+            }
+            
+            N4D.Proxy {
+                id: validate_auth
+                client: n4dLocal
+                method:"validate_auth"
+                
+                onResponse: {
+                    console.log("status",value[0]);
+                    console.log("status",value[1]);
+                    passwordField.enabled = true;
+                    stack.push(mainView);
+                }
+                
+                onError: {
+                    console.log("n4d error:\n",what);
+                    errorLogin.text="Login failed";
+                    errorLogin.visible=true;
+                }
+            }
+            
             ColumnLayout {
                 anchors.fill:parent
                 
@@ -104,13 +129,19 @@ QQC2.Pane {
                     echoMode: TextInput.Password
                     Layout.alignment: Qt.AlignHCenter
                     
-                    onAccepted: {
-                        
-                    }
                 }
                 
                 Item {
-                    height:64
+                    height:32
+                }
+                
+                Kirigami.InlineMessage {
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillWidth:true
+                    Layout.minimumHeight:32
+                    
+                    id: errorLogin
+                    type: Kirigami.MessageType.Error
                 }
                 
                 RowLayout {
@@ -120,6 +151,9 @@ QQC2.Pane {
                         text: i18nd("lliurex-homework-harvester","Login")
                         
                         onClicked: {
+                            passwordField.enabled = false;
+                            //n4dLocal.password = passwordField.text
+                            validate_auth.call([[userName,passwordField.text]]);
                         }
                     }
                     
@@ -127,7 +161,7 @@ QQC2.Pane {
                         text: i18nd("lliurex-homework-harvester","Cancel")
                         
                         onClicked: {
-                            Qt.quit();
+                            Qt.exit(-1);
                         }
                     }
                 }
