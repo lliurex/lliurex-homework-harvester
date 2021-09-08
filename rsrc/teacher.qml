@@ -10,6 +10,9 @@ import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.0
 
 QQC2.Pane {
+    id: main
+    
+    property string pswd;
     
     visible:true
     width: 400
@@ -18,45 +21,6 @@ QQC2.Pane {
     
     KCoreAddons.KUser {
         id: kuser
-    }
-    
-    N4D.Client {
-        id: n4d
-        address: "https://192.168.122.147:9779"
-        credential: N4D.Client.Anonymous
-    }
-    
-    N4D.Proxy {
-        id: share_get_paths
-        client: n4d
-        plugin:"TeacherShareManager"
-        method:"get_paths"
-        
-        onResponse: {
-            console.log("paths:");
-            for (var v=0;v<value.length;v++) {
-                console.log(v);
-            }
-        }
-        
-        onError: {
-            console.log("n4d error:\n",what);
-        }
-    }
-    
-    N4D.Proxy {
-        id: share_is_configured
-        client: n4d
-        plugin:"TeacherShareManager"
-        method:"is_configured"
-        
-        onResponse: {
-            console.log("is configured:",value);
-        }
-        
-        onError: {
-            console.log("n4d error:\n",what);
-        }
     }
     
     QQC2.StackView {
@@ -72,7 +36,7 @@ QQC2.Pane {
             
             N4D.Client {
                 id: n4dLocal
-                address: "https://localhost:9779"
+                address: "https://192.168.122.147:9779"
                 credential: N4D.Client.Password
                 user: userName
             }
@@ -83,16 +47,20 @@ QQC2.Pane {
                 method:"validate_auth"
                 
                 onResponse: {
-                    console.log("status",value[0]);
-                    console.log("status",value[1]);
+                    //console.log("status",value[0]);
+                    //console.log("status",value[1]);
                     passwordField.enabled = true;
+                    main.pswd = passwordField.text;
+                    passwordField.text = "";
                     stack.push(mainView);
                 }
                 
                 onError: {
                     console.log("n4d error:\n",what);
-                    errorLogin.text="Login failed";
-                    errorLogin.visible=true;
+                    errorLogin.text = "Login failed";
+                    errorLogin.visible = true;
+                    passwordField.enable = true;
+                    passwordField.text = "";
                 }
             }
             
@@ -175,6 +143,47 @@ QQC2.Pane {
         QQC2.Pane {
             property string folderName : teacherTarget.split('/').reverse()[0]
             
+            N4D.Client {
+                id: n4d
+                address: "https://192.168.122.147:9779"
+                credential: N4D.Client.Password
+            }
+            
+            N4D.Proxy {
+                id: share_get_paths
+                client: n4d
+                plugin:"TeacherShareManager"
+                method:"get_paths"
+                
+                onResponse: {
+                    console.log("paths:");
+                    for (var v=0;v<value.length;v++) {
+                        console.log(v);
+                    }
+                }
+                
+                onError: {
+                    console.log("n4d error:\n",what);
+                    errorLabel.text=what;
+                    errorLabel.visible=true;
+                }
+            }
+            
+            N4D.Proxy {
+                id: share_is_configured
+                client: n4d
+                plugin:"TeacherShareManager"
+                method:"is_configured"
+                
+                onResponse: {
+                    console.log("is configured:",value);
+                }
+                
+                onError: {
+                    console.log("n4d error:\n",what);
+                }
+            }
+            
             ColumnLayout {
                 anchors.fill:parent
                 
@@ -221,12 +230,23 @@ QQC2.Pane {
                     Layout.fillWidth: true
                     
                     QQC2.Button {
-                        text: i18nd("lliurex-homework-harvester",teacherAction)
+                        text: {
+                            if (teacherAction=="add") {
+                                return i18nd("lliurex-homework-harvester","Add")
+                            }
+                            
+                            if (teacherAction=="del") {
+                                return i18nd("lliurex-homework-harvester","Delete")
+                            }
+                            
+                            return ""
+                        }
                         
                         onClicked: {
+                            n4d.user = userName;
+                            n4d.password = main.pswd;
                             share_get_paths.call([]);
-                            errorLabel.text="No N4D found";
-                            errorLabel.visible=true;
+                            
                         }
                     }
                     
@@ -234,7 +254,7 @@ QQC2.Pane {
                         text: i18nd("lliurex-homework-harvester","Cancel")
                         
                         onClicked: {
-                            Qt.quit();
+                            Qt.exit(-1);
                         }
                     }
                 }
