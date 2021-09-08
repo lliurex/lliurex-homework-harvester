@@ -59,7 +59,7 @@ QQC2.Pane {
                     console.log("n4d error:\n",what);
                     errorLogin.text = "Login failed";
                     errorLogin.visible = true;
-                    passwordField.enable = true;
+                    passwordField.enabled = true;
                     passwordField.text = "";
                 }
             }
@@ -177,6 +177,24 @@ QQC2.Pane {
                 
                 onResponse: {
                     console.log("is configured:",value);
+                    
+                    if (teacherAction=="del") {
+                        if (value==false) {
+                            errorLabel.text=i18nd("lliurex-homework-harvester","This share is not configured");
+                            errorLabel.visible=true;
+                        }
+                        else {
+                        }
+                    }
+                    
+                    if (teacherAction=="add") {
+                        if (value==true) {
+                            errorLabel.text=i18nd("lliurex-homework-harvester","This share is already configured");
+                            errorLabel.visible=true;
+                        }
+                        else {
+                        }
+                    }
                 }
                 
                 onError: {
@@ -243,9 +261,11 @@ QQC2.Pane {
                         }
                         
                         onClicked: {
+                            errorLabel.visible = false;
                             n4d.user = userName;
                             n4d.password = main.pswd;
-                            share_get_paths.call([]);
+                            
+                            share_is_configured.call([userName,teacherTarget]);
                             
                         }
                     }
