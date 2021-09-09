@@ -193,12 +193,36 @@ QQC2.Pane {
                             errorLabel.visible=true;
                         }
                         else {
+                            share_add_path.call(["",teacherTarget,folderName,"",""]);
                         }
                     }
                 }
                 
                 onError: {
                     console.log("n4d error:\n",what);
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Error checking share status");
+                    errorLabel.visible=true;
+                }
+            }
+            
+            N4D.Proxy {
+                id: share_add_path
+                client: n4d
+                plugin:"TeacherShareManager"
+                method:"add_path"
+                
+                onResponse: {
+                    console.log("added:\n",value);
+                    
+                    if (value) {
+                        Qt.exit(0);
+                    }
+                }
+                
+                onError: {
+                    console.log("n4d error:\n",what);
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Can not add share");
+                    errorLabel.visible=true;
                 }
             }
             
@@ -265,7 +289,7 @@ QQC2.Pane {
                             n4d.user = userName;
                             n4d.password = main.pswd;
                             
-                            share_is_configured.call([userName,teacherTarget]);
+                            share_is_configured.call(["",teacherTarget]);
                             
                         }
                     }
