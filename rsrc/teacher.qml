@@ -35,7 +35,7 @@ QQC2.Pane {
         QQC2.Pane {
             
             N4D.Client {
-                id: n4dLocal
+                id: n4d
                 address: "https://192.168.122.147:9779"
                 credential: N4D.Client.Password
                 user: userName
@@ -43,7 +43,7 @@ QQC2.Pane {
             
             N4D.Proxy {
                 id: validate_auth
-                client: n4dLocal
+                client: n4d
                 method:"validate_auth"
                 
                 onResponse: {
@@ -149,6 +149,11 @@ QQC2.Pane {
                 credential: N4D.Client.Password
             }
             
+            N4D.Client {
+                id: n4dLocal
+                credential: N4D.Client.Password
+            }
+            
             N4D.Proxy {
                 id: share_get_paths
                 client: n4d
@@ -157,8 +162,8 @@ QQC2.Pane {
                 
                 onResponse: {
                     console.log("paths:");
-                    for (var v=0;v<value.length;v++) {
-                        console.log(v);
+                    for (var key in value) {
+                        console.log(key,":",value[key]);
                     }
                 }
                 
@@ -226,6 +231,21 @@ QQC2.Pane {
                 }
             }
             
+            N4D.Proxy {
+                id: register_share_info
+                client: n4dLocal
+                plugin:"TeacherShare"
+                method:"register_share_info"
+                
+                onResponse: {
+                    console.log(value);
+                }
+                
+                onError: {
+                    console.log("n4d error:\n",what);
+                }
+            }
+            
             ColumnLayout {
                 anchors.fill:parent
                 
@@ -288,7 +308,10 @@ QQC2.Pane {
                             errorLabel.visible = false;
                             n4d.user = userName;
                             n4d.password = main.pswd;
+                            n4dLocal.user = userName;
+                            n4dLocal.password = main.pswd;
                             
+                            share_get_paths.call([]);
                             share_is_configured.call(["",teacherTarget]);
                             
                         }
