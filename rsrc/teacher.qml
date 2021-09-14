@@ -189,6 +189,7 @@ QQC2.Pane {
                             errorLabel.visible=true;
                         }
                         else {
+                            share_remove_path.call([""]);
                         }
                     }
                     
@@ -199,6 +200,7 @@ QQC2.Pane {
                         }
                         else {
                             share_add_path.call(["",teacherTarget,folderName,"",""]);
+                            register_share_info.call([userName,main.pswd,teacherTarget]);
                         }
                     }
                 }
@@ -220,7 +222,7 @@ QQC2.Pane {
                     console.log("added:\n",value);
                     
                     if (value) {
-                        Qt.exit(0);
+                        //Qt.exit(0);
                     }
                 }
                 
@@ -232,13 +234,33 @@ QQC2.Pane {
             }
             
             N4D.Proxy {
+                id: share_remove_path
+                client: n4d
+                plugin:"TeacherShareManager"
+                method:"add_path"
+                
+                onResponse: {
+                    console.log("removed:\n",value);
+                    
+                }
+                
+                onError: {
+                    console.log("n4d error:\n",what);
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Can not remove share");
+                    errorLabel.visible=true;
+                }
+            }
+            
+            N4D.Proxy {
                 id: register_share_info
                 client: n4dLocal
                 plugin:"TeacherShare"
                 method:"register_share_info"
                 
                 onResponse: {
-                    console.log(value);
+                    console.log("share registered");
+                    
+                    Qt.exit(0);
                 }
                 
                 onError: {
