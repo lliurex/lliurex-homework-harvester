@@ -27,6 +27,7 @@
 #include <QList>
 #include <QVariant>
 #include <QQuickView>
+#include <QQmlEngine>
 #include <QQmlContext>
 #include <QDebug>
 
@@ -72,7 +73,7 @@ int main(int argc,char* argv[])
     
     system::User me = system::User::me();
     ctxt->setContextProperty("userName",QString::fromStdString(me.name));
-    
+    QObject::connect(ctxt->engine(),&QQmlEngine::exit,&app,&QCoreApplication::exit);
     view->setSource(QUrl(QStringLiteral("qrc:/student.qml")));
     view->show();
     return app.exec();

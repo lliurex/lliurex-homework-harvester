@@ -42,7 +42,7 @@ QQC2.Pane {
     N4D.Client {
         id: n4dLocal
         address: "https://localhost:9779"
-        credential: N4D.Client.Password
+        credential: N4D.Client.Anonymous
         
     }
     
@@ -68,17 +68,17 @@ QQC2.Pane {
     
     N4D.Proxy {
         id: send_to_teacher
-        client: n4d
+        client: n4dLocal
         plugin: "TeacherShare"
         method:"send_to_teacher_net"
         
         onResponse: {
-            
+            stack.push(successPage);
         }
         
         onError: {
             console.log("n4d error:\n",what);
-            
+            stack.push(errorPage);
         }
     }
     
@@ -112,98 +112,174 @@ QQC2.Pane {
         id: modelTeachers
     }
     
-    ColumnLayout {
-        anchors.fill:parent
-        
-        QQC2.Label {
-            text: i18nd("lliurex-homework-harvester","Files")
-        }
-        
-        ListView {
-            id: listFiles
-            //Layout.alignment: Qt.AlignCenter
-            Layout.fillWidth: true
-            Layout.preferredWidth: 250
-            Layout.preferredHeight: 300
-            //Layout.fillHeight: true
+    ListModel {
+        id: queue
+    }
+    
+    QQC2.StackView {
+        id: stack
+        initialItem: setupPage
+        anchors.fill: parent
+    }
+    
+    Component {
+        id: setupPage
+        ColumnLayout {
+            //anchors.fill:parent
             
-            model:modelFiles
-            highlightFollowsCurrentItem: true
-            
-            delegate: Kirigami.BasicListItem {
-                label: model.name
+            QQC2.Label {
+                text: i18nd("lliurex-homework-harvester","Files")
             }
-        }
-        
-        RowLayout {
-            Layout.alignment: Qt.AlignLeft
-            Layout.fillWidth: true
             
-            QQC2.Button {
-                text:"+"
+            ListView {
+                id: listFiles
+                //Layout.alignment: Qt.AlignCenter
+                Layout.fillWidth: true
+                Layout.preferredWidth: 250
+                Layout.preferredHeight: 300
+                //Layout.fillHeight: true
                 
-                onClicked: {
-                    fileDialog.open();
+                model:modelFiles
+                highlightFollowsCurrentItem: true
+                
+                delegate: Kirigami.BasicListItem {
+                    label: model.name
                 }
             }
             
-            QQC2.Button {
-                text:"-"
+            RowLayout {
+                Layout.alignment: Qt.AlignLeft
+                Layout.fillWidth: true
                 
-                onClicked: {
-                    modelFiles.remove(listFiles.currentIndex);
-                }
-            }
-        }
-        
-        QQC2.Label {
-            text: i18nd("lliurex-homework-harvester","Teacher")
-        }
-        
-        ListView {
-            //Layout.alignment: Qt.AlignCenter
-            Layout.fillWidth: true
-            Layout.preferredWidth: 250
-            Layout.preferredHeight: 100
-            
-            model:modelTeachers
-            highlightFollowsCurrentItem: true
-            
-            delegate: Kirigami.BasicListItem {
-                label: model.name
-            }
-        }
-        
-        Kirigami.InlineMessage {
-            Layout.alignment: Qt.AlignCenter
-            Layout.fillWidth:true
-            Layout.minimumHeight:32
-            
-            id: errorLabel
-            type: Kirigami.MessageType.Error
-        }
-        
-        RowLayout {
-            Layout.alignment: Qt.AlignRight
-            Layout.fillWidth: true
-            
-            QQC2.Button {
-                text:i18nd("lliurex-homework-harvester","Send")
-                
-                onClicked: {
-                    errorLabel.visible=false;
+                QQC2.Button {
+                    text:"+"
                     
-                    for (var n=0;n<modelFiles.count;n++) {
-                        console.log(modelFiles.get(n).name);
+                    onClicked: {
+                        fileDialog.open();
+                    }
+                }
+                
+                QQC2.Button {
+                    text:"-"
+                    
+                    onClicked: {
+                        modelFiles.remove(listFiles.currentIndex);
+                    }
+                }
+            }
+            
+            QQC2.Label {
+                text: i18nd("lliurex-homework-harvester","Teacher")
+            }
+            
+            ListView {
+                //Layout.alignment: Qt.AlignCenter
+                Layout.fillWidth: true
+                Layout.preferredWidth: 250
+                Layout.preferredHeight: 100
+                
+                model:modelTeachers
+                highlightFollowsCurrentItem: true
+                
+                delegate: Kirigami.BasicListItem {
+                    label: model.name
+                }
+            }
+            
+            Kirigami.InlineMessage {
+                Layout.alignment: Qt.AlignCenter
+                Layout.fillWidth:true
+                Layout.minimumHeight:32
+                
+                id: errorLabel
+                type: Kirigami.MessageType.Error
+            }
+            
+            RowLayout {
+                Layout.alignment: Qt.AlignRight
+                Layout.fillWidth: true
+                
+                QQC2.Button {
+                    text:i18nd("lliurex-homework-harvester","Send")
+                    
+                    onClicked: {
+                        errorLabel.visible=false;
+                        
+                        queue.clear();
+                        
+                        for (var n=0;n<modelFiles.count;n++) {
+                            console.log(modelFiles.get(n).name);
+                            queue.append(modelFiles.get(n));
+                        }
+                        
+                        console.log("send to ",modelTeachers.get(modelTeachers.currentIndex).name);
+                        stack.push(transferPage);
+                        send_to_teacher.call([userName,modelTeachers.get(modelTeachers.currentIndex).name,queue.get(0).path]);
                     }
                     
-                    //send_to_teacher.call([]);
                 }
                 
+                QQC2.Button {
+                    text:i18nd("lliurex-homework-harvester","Cancel")
+                    
+                    onClicked: {
+                        Qt.exit(0);
+                    }
+                }
+            }
+            
+        }
+    }
+    
+    Component {
+        id: transferPage
+        
+        ColumnLayout {
+            QQC2.Label {
+                Layout.alignment: Qt.AlignCenter
+                Layout.fillWidth:true
+                
+                text: "copy..."
+            }
+        }
+    }
+    
+    Component {
+        id: errorPage
+        
+        ColumnLayout {
+            QQC2.Label {
+                Layout.alignment: Qt.AlignCenter
+                Layout.fillWidth:true
+                
+                text: "Error"
             }
             
             QQC2.Button {
-                text:i18nd("lliurex-homework-harvester","Cancel")
+                Layout.alignment: Qt.AlignRight | Qt.AlignBottom
+                text:i18nd("lliurex-homework-harvester","Close")
+                
+                onClicked: {
+                    Qt.exit(0);
+                }
+            }
+        }
+    }
+    
+    Component {
+        id: successPage
+        
+        ColumnLayout {
+            QQC2.Label {
+                Layout.alignment: Qt.AlignCenter
+                Layout.fillWidth:true
+                
+                text: "Success"
+            }
+            
+            QQC2.Button {
+                Layout.alignment: Qt.AlignRight | Qt.AlignBottom
+                text:i18nd("lliurex-homework-harvester","Close")
                 
                 onClicked: {
                     Qt.exit(0);
