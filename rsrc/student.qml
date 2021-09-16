@@ -1,3 +1,5 @@
+import Edupals.N4D 1.0 as N4D
+
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.16 as Kirigami
 
@@ -30,13 +32,59 @@ QQC2.Pane {
         modelFiles.append({"name":name,"path":path});
     }
     
-    Component.onCompleted: {
-        // HACK
-        modelTeachers.append({"name":"teacher00"});
+    N4D.Client {
+        id: n4d
+        address: "https://192.168.122.147:9779"
+        credential: N4D.Client.Anonymous
         
-        for (var n=0;n<files.length;n++) {
-            insertFile(files[n]);
+    }
+    
+    N4D.Client {
+        id: n4dLocal
+        address: "https://localhost:9779"
+        credential: N4D.Client.Password
+        
+    }
+    
+    N4D.Proxy {
+        id: share_get_paths
+        client: n4d
+        plugin: "TeacherShareManager"
+        method:"get_paths"
+        
+        onResponse: {
+            for (var key in value) {
+                console.log(key,":",value[key]);
+                modelTeachers.append({"name":key});
+            }
         }
+        
+        onError: {
+            console.log("n4d error:\n",what);
+            errorLabel.text=i18nd("lliurex-homework-harvester","Can not list shares");
+            errorLabel.visible=true;
+        }
+    }
+    
+    N4D.Proxy {
+        id: send_to_teacher
+        client: n4d
+        plugin: "TeacherShare"
+        method:"send_to_teacher_net"
+        
+        onResponse: {
+            
+        }
+        
+        onError: {
+            console.log("n4d error:\n",what);
+            
+        }
+    }
+    
+    Component.onCompleted: {
+        
+        share_get_paths.call([]);
     }
     
     FileDialog {
@@ -51,7 +99,7 @@ QQC2.Pane {
         }
         onRejected: {
             console.log("Canceled")
-            Qt.quit()
+            //Qt.exit(0)
         }
         
     }
@@ -143,8 +191,13 @@ QQC2.Pane {
                 text:i18nd("lliurex-homework-harvester","Send")
                 
                 onClicked: {
-                    errorLabel.text="No N4D found";
-                    errorLabel.visible=true;
+                    errorLabel.visible=false;
+                    
+                    for (var n=0;n<modelFiles.count;n++) {
+                        console.log(modelFiles.get(n).name);
+                    }
+                    
+                    //send_to_teacher.call([]);
                 }
                 
             }
@@ -153,7 +206,7 @@ QQC2.Pane {
                 text:i18nd("lliurex-homework-harvester","Cancel")
                 
                 onClicked: {
-                    Qt.Quit();
+                    Qt.exit(0);
                 }
             }
         }

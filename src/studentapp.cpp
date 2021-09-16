@@ -19,6 +19,8 @@
 
 //#include "studentwindow.hpp"
 
+#include <user.hpp>
+
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QFileInfo>
@@ -31,6 +33,7 @@
 #include <iostream>
 
 //using namespace harvester;
+using namespace edupals;
 using namespace std;
 
 int main(int argc,char* argv[])
@@ -66,6 +69,10 @@ int main(int argc,char* argv[])
     }
     
     ctxt->setContextProperty("files",absFiles);
+    
+    system::User me = system::User::me();
+    ctxt->setContextProperty("userName",QString::fromStdString(me.name));
+    
     view->setSource(QUrl(QStringLiteral("qrc:/student.qml")));
     view->show();
     return app.exec();
