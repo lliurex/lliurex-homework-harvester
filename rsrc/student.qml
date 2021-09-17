@@ -34,7 +34,7 @@ QQC2.Pane {
     
     N4D.Client {
         id: n4d
-        address: "https://192.168.122.147:9779"
+        address: "https://server:9779"
         credential: N4D.Client.Anonymous
         
     }
@@ -61,8 +61,8 @@ QQC2.Pane {
         
         onError: {
             console.log("n4d error:\n",what);
-            errorLabel.text=i18nd("lliurex-homework-harvester","Can not list shares");
-            errorLabel.visible=true;
+            msg.text=i18nd("lliurex-homework-harvester","Can not list shares");
+            msg.visible=true;
         }
     }
     
@@ -73,16 +73,36 @@ QQC2.Pane {
         method:"send_to_teacher_net"
         
         onResponse: {
-            stack.push(successPage);
+            queue.remove(0);
+            if (queue.count>0) {
+                lblProgress.text="Sending files "+queue.count+" from "+modelFiles.count;
+                pbar.value = 1.0-(queue.count/modelFiles.count);
+                
+                console.log("sending:",queue.get(0).name);
+                send_to_teacher.call([userName,modelTeachers.get(modelTeachers.currentIndex).name,queue.get(0).path]);
+            }
+            else {
+                msg.type=Kirigami.MessageType.Positive;
+                msg.text=i18nd("lliurex-homework-harvester","Files sent!");
+                msg.visible=true;
+                progress.visible=false;
+            }
         }
         
         onError: {
             console.log("n4d error:\n",what);
-            stack.push(errorPage);
+            msg.type=Kirigami.MessageType.Error;
+            msg.text=i18nd("lliurex-homework-harvester","Error sending files");
+            msg.visible=true;
+            progress.visible=false;
         }
     }
     
     Component.onCompleted: {
+        
+        for (var file in files) {
+            insertFile(files[file]);
+        }
         
         share_get_paths.call([]);
     }
@@ -116,170 +136,130 @@ QQC2.Pane {
         id: queue
     }
     
-    QQC2.StackView {
-        id: stack
-        initialItem: setupPage
-        anchors.fill: parent
-    }
-    
-    Component {
-        id: setupPage
-        ColumnLayout {
-            //anchors.fill:parent
-            
-            QQC2.Label {
-                text: i18nd("lliurex-homework-harvester","Files")
-            }
-            
-            ListView {
-                id: listFiles
-                //Layout.alignment: Qt.AlignCenter
-                Layout.fillWidth: true
-                Layout.preferredWidth: 250
-                Layout.preferredHeight: 300
-                //Layout.fillHeight: true
-                
-                model:modelFiles
-                highlightFollowsCurrentItem: true
-                
-                delegate: Kirigami.BasicListItem {
-                    label: model.name
-                }
-            }
-            
-            RowLayout {
-                Layout.alignment: Qt.AlignLeft
-                Layout.fillWidth: true
-                
-                QQC2.Button {
-                    text:"+"
-                    
-                    onClicked: {
-                        fileDialog.open();
-                    }
-                }
-                
-                QQC2.Button {
-                    text:"-"
-                    
-                    onClicked: {
-                        modelFiles.remove(listFiles.currentIndex);
-                    }
-                }
-            }
-            
-            QQC2.Label {
-                text: i18nd("lliurex-homework-harvester","Teacher")
-            }
-            
-            ListView {
-                //Layout.alignment: Qt.AlignCenter
-                Layout.fillWidth: true
-                Layout.preferredWidth: 250
-                Layout.preferredHeight: 100
-                
-                model:modelTeachers
-                highlightFollowsCurrentItem: true
-                
-                delegate: Kirigami.BasicListItem {
-                    label: model.name
-                }
-            }
-            
-            Kirigami.InlineMessage {
-                Layout.alignment: Qt.AlignCenter
-                Layout.fillWidth:true
-                Layout.minimumHeight:32
-                
-                id: errorLabel
-                type: Kirigami.MessageType.Error
-            }
-            
-            RowLayout {
-                Layout.alignment: Qt.AlignRight
-                Layout.fillWidth: true
-                
-                QQC2.Button {
-                    text:i18nd("lliurex-homework-harvester","Send")
-                    
-                    onClicked: {
-                        errorLabel.visible=false;
-                        
-                        queue.clear();
-                        
-                        for (var n=0;n<modelFiles.count;n++) {
-                            console.log(modelFiles.get(n).name);
-                            queue.append(modelFiles.get(n));
-                        }
-                        
-                        console.log("send to ",modelTeachers.get(modelTeachers.currentIndex).name);
-                        stack.push(transferPage);
-                        send_to_teacher.call([userName,modelTeachers.get(modelTeachers.currentIndex).name,queue.get(0).path]);
-                    }
-                    
-                }
-                
-                QQC2.Button {
-                    text:i18nd("lliurex-homework-harvester","Cancel")
-                    
-                    onClicked: {
-                        Qt.exit(0);
-                    }
-                }
-            }
-            
-        }
-    }
-    
-    Component {
-        id: transferPage
+
+    ColumnLayout {
+        anchors.fill:parent
         
-        ColumnLayout {
-            QQC2.Label {
-                Layout.alignment: Qt.AlignCenter
-                Layout.fillWidth:true
-                
-                text: "copy..."
+        QQC2.Label {
+            text: i18nd("lliurex-homework-harvester","Files")
+        }
+        
+        ListView {
+            id: listFiles
+            //Layout.alignment: Qt.AlignCenter
+            Layout.fillWidth: true
+            Layout.preferredWidth: 250
+            Layout.preferredHeight: 300
+            //Layout.fillHeight: true
+            
+            model:modelFiles
+            highlightFollowsCurrentItem: true
+            
+            delegate: Kirigami.BasicListItem {
+                label: model.name
             }
         }
-    }
-    
-    Component {
-        id: errorPage
         
-        ColumnLayout {
-            QQC2.Label {
-                Layout.alignment: Qt.AlignCenter
-                Layout.fillWidth:true
-                
-                text: "Error"
-            }
+        RowLayout {
+            Layout.alignment: Qt.AlignLeft
+            Layout.fillWidth: true
             
             QQC2.Button {
-                Layout.alignment: Qt.AlignRight | Qt.AlignBottom
-                text:i18nd("lliurex-homework-harvester","Close")
+                text:"+"
                 
                 onClicked: {
-                    Qt.exit(0);
+                    fileDialog.open();
                 }
-            }
-        }
-    }
-    
-    Component {
-        id: successPage
-        
-        ColumnLayout {
-            QQC2.Label {
-                Layout.alignment: Qt.AlignCenter
-                Layout.fillWidth:true
-                
-                text: "Success"
             }
             
             QQC2.Button {
-                Layout.alignment: Qt.AlignRight | Qt.AlignBottom
-                text:i18nd("lliurex-homework-harvester","Close")
+                text:"-"
+                
+                onClicked: {
+                    modelFiles.remove(listFiles.currentIndex);
+                }
+            }
+        }
+        
+        QQC2.Label {
+            text: i18nd("lliurex-homework-harvester","Teacher")
+        }
+        
+        ListView {
+            //Layout.alignment: Qt.AlignCenter
+            Layout.fillWidth: true
+            Layout.preferredWidth: 250
+            Layout.preferredHeight: 100
+            
+            model:modelTeachers
+            highlightFollowsCurrentItem: true
+            
+            delegate: Kirigami.BasicListItem {
+                label: model.name
+            }
+        }
+        
+        ColumnLayout {
+            id: progress
+            visible:false;
+            
+            Layout.fillWidth: true
+            
+            QQC2.ProgressBar {
+                id: pbar
+                Layout.fillWidth: true
+                
+            
+            }
+            
+            QQC2.Label {
+                id: lblProgress
+                Layout.fillWidth: true
+                
+            }
+        }
+        
+        Kirigami.InlineMessage {
+            Layout.alignment: Qt.AlignCenter
+            Layout.fillWidth:true
+            Layout.minimumHeight:32
+            
+            id: msg
+            //type: Kirigami.MessageType.Error
+        }
+        
+        RowLayout {
+            Layout.alignment: Qt.AlignRight
+            Layout.fillWidth: true
+            
+            QQC2.Button {
+                id: btnSend
+                text:i18nd("lliurex-homework-harvester","Send")
+                
+                onClicked: {
+                    
+                    queue.clear();
+                    
+                    for (var n=0;n<modelFiles.count;n++) {
+                        console.log(modelFiles.get(n).name);
+                        queue.append(modelFiles.get(n));
+                    }
+                    
+                    console.log("send to ",modelTeachers.get(modelTeachers.currentIndex).name);
+                    
+                    msg.visible=false;
+                    btnSend.enabled=false;
+                    progress.visible=true;
+                    lblProgress.text="Sending files "+queue.count+" from "+modelFiles.count;
+                    
+                    console.log("sending:",queue.get(0).name);
+                    send_to_teacher.call([userName,modelTeachers.get(modelTeachers.currentIndex).name,queue.get(0).path]);
+                }
+                
+            }
+            
+            QQC2.Button {
+                text:i18nd("lliurex-homework-harvester","Cancel")
                 
                 onClicked: {
                     Qt.exit(0);

@@ -36,7 +36,7 @@ QQC2.Pane {
             
             N4D.Client {
                 id: n4d
-                address: "https://192.168.122.147:9779"
+                address: "https://server:9779"
                 credential: N4D.Client.Password
                 user: userName
             }
@@ -57,7 +57,7 @@ QQC2.Pane {
                 
                 onError: {
                     console.log("n4d error:\n",what);
-                    errorLogin.text = "Login failed";
+                    errorLogin.text = i18nd("lliurex-homework-harvester","Login failed");
                     errorLogin.visible = true;
                     passwordField.enabled = true;
                     passwordField.text = "";
@@ -69,7 +69,7 @@ QQC2.Pane {
                 
                 QQC2.Label {
                     
-                    text:"homework harvester needs your teacher password to perform this action"
+                    text:i18nd("lliurex-homework-harvester","homework harvester needs your teacher password to perform this action")
                     wrapMode:Text.WordWrap
                     //anchors.verticalCenter: userField.verticalCenter
                     Layout.alignment: Qt.AlignHCenter
@@ -145,7 +145,7 @@ QQC2.Pane {
             
             N4D.Client {
                 id: n4d
-                address: "https://192.168.122.147:9779"
+                address: "https://server:9779"
                 credential: N4D.Client.Password
             }
             
