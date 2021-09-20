@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2021 Lliurex project
+ *
+ * Author:
+ *  Enrique Medina Gremaldos <quiqueiii@gmail.com>
+ *
+ * Source:
+ *  https://github.com/lliurex/lliurex-homework-harvester
+ *
+ * This file is a part of lliurex homework harvester
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ */
+
 import Edupals.N4D 1.0 as N4D
 
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -94,9 +117,14 @@ QQC2.Pane {
                 
                 QQC2.TextField {
                     id: passwordField
+                    focus: true
                     echoMode: TextInput.Password
                     Layout.alignment: Qt.AlignHCenter
                     
+                    onAccepted: {
+                        enabled = false;
+                        validate_auth.call([[userName,passwordField.text]]);
+                    }
                 }
                 
                 Item {
@@ -126,7 +154,7 @@ QQC2.Pane {
                     }
                     
                     QQC2.Button {
-                        text: i18nd("lliurex-homework-harvester","Cancel")
+                        text: i18nd("lliurex-homework-harvester","Close")
                         
                         onClicked: {
                             Qt.exit(-1);
@@ -142,6 +170,7 @@ QQC2.Pane {
         
         QQC2.Pane {
             property string folderName : teacherTarget.split('/').reverse()[0]
+            property string teacherAction : "add"
             
             N4D.Client {
                 id: n4d
@@ -183,26 +212,13 @@ QQC2.Pane {
                 onResponse: {
                     console.log("is configured:",value);
                     
-                    if (teacherAction=="del") {
-                        if (value==false) {
-                            errorLabel.text=i18nd("lliurex-homework-harvester","This share is not configured");
-                            errorLabel.visible=true;
-                        }
-                        else {
-                            share_remove_path.call([""]);
-                        }
+                    if (value) {
+                        teacherAction="del";
+                    }
+                    else {
+                        teacherAction="add";
                     }
                     
-                    if (teacherAction=="add") {
-                        if (value==true) {
-                            errorLabel.text=i18nd("lliurex-homework-harvester","This share is already configured");
-                            errorLabel.visible=true;
-                        }
-                        else {
-                            share_add_path.call(["",teacherTarget,folderName,"",""]);
-                            register_share_info.call([userName,main.pswd,teacherTarget]);
-                        }
-                    }
                 }
                 
                 onError: {
@@ -221,9 +237,10 @@ QQC2.Pane {
                 onResponse: {
                     console.log("added:\n",value);
                     
-                    if (value) {
-                        //Qt.exit(0);
-                    }
+                    errorLabel.type=Kirigami.MessageType.Positive;
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Shared directory added");
+                    errorLabel.visible=true;
+                    
                 }
                 
                 onError: {
@@ -237,11 +254,13 @@ QQC2.Pane {
                 id: share_remove_path
                 client: n4d
                 plugin:"TeacherShareManager"
-                method:"add_path"
+                method:"remove_path"
                 
                 onResponse: {
                     console.log("removed:\n",value);
-                    
+                    errorLabel.type=Kirigami.MessageType.Positive;
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Shared directory removed");
+                    errorLabel.visible=true;
                 }
                 
                 onError: {
@@ -259,13 +278,25 @@ QQC2.Pane {
                 
                 onResponse: {
                     console.log("share registered");
-                    
-                    Qt.exit(0);
                 }
                 
                 onError: {
                     console.log("n4d error:\n",what);
+                    errorLabel.type=Kirigami.MessageType.Error;
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Can not register share");
+                    errorLabel.visible=true;
                 }
+            }
+            
+            Component.onCompleted: {
+                console.log("Completed!");
+                n4d.user = userName;
+                n4d.password = main.pswd;
+                n4dLocal.user = userName;
+                n4dLocal.password = main.pswd;
+                
+                share_is_configured.call(["",teacherTarget]);
+                share_get_paths.call([]);
             }
             
             ColumnLayout {
@@ -328,19 +359,22 @@ QQC2.Pane {
                         
                         onClicked: {
                             errorLabel.visible = false;
-                            n4d.user = userName;
-                            n4d.password = main.pswd;
-                            n4dLocal.user = userName;
-                            n4dLocal.password = main.pswd;
                             
-                            share_get_paths.call([]);
-                            share_is_configured.call(["",teacherTarget]);
+                            if (teacherAction=="add") {
+                                enabled=false;
+                                share_add_path.call(["",teacherTarget,folderName,"",""]);
+                                register_share_info.call([userName,main.pswd,teacherTarget]);
+                            }
                             
+                            if (teacherAction=="del") {
+                                enabled=false;
+                                share_remove_path.call([""]);
+                            }
                         }
                     }
                     
                     QQC2.Button {
-                        text: i18nd("lliurex-homework-harvester","Cancel")
+                        text: i18nd("lliurex-homework-harvester","Close")
                         
                         onClicked: {
                             Qt.exit(-1);

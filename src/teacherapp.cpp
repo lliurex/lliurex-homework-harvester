@@ -44,12 +44,10 @@ int main(int argc,char* argv[])
     parser.setApplicationDescription("LliureX Homework Harvester teacher gui");
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument("action", "action to do (add | del | manage)");
     parser.addPositionalArgument("target", "folder to share");
     
     parser.process(app);
     
-    QString action;
     QString target;
     
     const QStringList args = parser.positionalArguments();
@@ -58,36 +56,18 @@ int main(int argc,char* argv[])
         parser.showHelp(0);
     }
     
-    if (args[0]!="add") {
-         if (args[0]!="del") {
-              if (args[0]!="manage") {
-                cerr<<"Error: expected action: add, del or manage, not "<<args[0].toStdString()<<endl;
-                return 1;
-              }
-         }
+    target = args[0];
+    
+    QFileInfo info(target);
+    
+    if (!info.exists() or !info.isDir()) {
+        cerr<<"Error: target "<<target.toStdString()<<" is not a folder"<<endl;
+        return 3;
     }
-    
-    action = args[0];
-    
-    if (args[0]=="add" or args[0]=="del") {
-        if (args.size()<2) {
-            cerr<<"Error: missing target folder"<<endl;
-            return 2;
-        }
-        
-        target = args[1];
-        
-        QFileInfo info(target);
-        
-        if (!info.exists() or !info.isDir()) {
-            cerr<<"Error: target "<<target.toStdString()<<" is not a folder"<<endl;
-            return 3;
-        }
-        else {
-            clog<<"folder:"<<target.toStdString()<<endl;
-            target=info.absoluteFilePath();
-            clog<<"folder:"<<target.toStdString()<<endl;
-        }
+    else {
+        clog<<"folder:"<<target.toStdString()<<endl;
+        target=info.absoluteFilePath();
+        clog<<"folder:"<<target.toStdString()<<endl;
     }
     
     QQuickView *view = new QQuickView;
@@ -95,7 +75,6 @@ int main(int argc,char* argv[])
     view->setMaximumSize(QSize(400,360));
     QQmlContext* ctxt = view->rootContext();
     QObject::connect(ctxt->engine(),&QQmlEngine::exit,&app,&QCoreApplication::exit);
-    ctxt->setContextProperty("teacherAction",action);
     ctxt->setContextProperty("teacherTarget",target);
     
     system::User me = system::User::me();
