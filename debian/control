@@ -7,6 +7,20 @@ Standards-Version: 3.9.3
 
 Package: lliurex-homework-harvester
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, python3, n4d(>=0.47.2)
+Depends: ${shlibs:Depends}, ${misc:Depends}, python3, n4d(>=0.900)
 Description:  Application to send files to teachers
  Application to send files to teachers with a right click.
+
+Package: n4d-homeworkharvester-server
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, python3, n4d(>=0.900)
+Conflicts: n4d-server-plugins (<=0.224)
+Description:  N4D homeworkhaverster plugin to be installed in server
+ N4D plugin that manages teachers shares list.
+ 
+Package: n4d-homeworkharvester-client
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, python3, n4d(>=0.900), openssh-server
+Description:  N4D homeworkhaverster plugin to be installed in llx classroom
+ N4D plugin that manages sending files to teachers shares.
+ 
