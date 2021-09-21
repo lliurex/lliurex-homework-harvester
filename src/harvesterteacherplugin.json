@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Icon": "application-x-cd-image",
+        "MimeTypes": [
+            "inode/directory"
+        ],
+        "Name": "Lliurex homework harvester teacher plugin",
+        "ServiceTypes": [
+            "KFileItemAction/Plugin"
+        ]
+    },
+    "MimeType": "inode/directory;"
+}

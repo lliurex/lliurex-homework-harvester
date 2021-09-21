@@ -7,29 +7,28 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 find_package(KF5CoreAddons REQUIRED)
 find_package(KF5KIO REQUIRED)
-find_package(Qt5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets Quick)
+
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fexceptions")
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -foperator-names")
 
 find_package(EdupalsBase REQUIRED)
-find_package(EdupalsN4D REQUIRED)
-find_package(EdupalsN4DAgent REQUIRED)
 
 include(KDEInstallDirs)
 
 kcoreaddons_add_plugin(harvesterteacherplugin SOURCES harvesterteacherplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
-kcoreaddons_desktop_to_json(harvesterteacherplugin harvesterteacherplugin.desktop) # generate the json file
 
 target_link_libraries(harvesterteacherplugin KF5::KIOWidgets)
 
 kcoreaddons_add_plugin(harvesterstudentplugin SOURCES harvesterstudentplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
-kcoreaddons_desktop_to_json(harvesterstudentplugin harvesterstudentplugin.desktop) # generate the json file
 
 target_link_libraries(harvesterstudentplugin KF5::KIOWidgets)
 
-add_executable(llx-homework-student studentapp.cpp studentwindow.cpp studentframe1.ui login.ui ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
-target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets Edupals::Base Edupals::N4D -lpthread)
+add_executable(llx-homework-student studentapp.cpp ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
+target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets Qt5::Quick Edupals::Base)
 
-add_executable(llx-homework-teacher teacherapp.cpp teacherwindow.cpp)
-target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets Edupals::Base Edupals::N4D Edupals::N4D::Agent -lpthread)
+add_executable(llx-homework-teacher teacherapp.cpp ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
+target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets Qt5::Quick Edupals::Base)
 
 
 add_custom_target(
