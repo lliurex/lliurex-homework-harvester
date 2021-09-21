@@ -17,12 +17,14 @@ class TeacherShare:
 	SEND_TO_TEACHER_ERROR=-10
 	GRAB_FILE_ERROR=-15
 	CREDENTIALS_ERROR=-20
+
 	
 	def __init__(self):
 		
 		self.credentials=None
 		
 	#def init
+
 
 	def send_to_teacher_net(self,from_user,to_user,file_path):
 
@@ -42,14 +44,12 @@ class TeacherShare:
 				paths=ret["return"]
 			else:
 				print(ret["msg"])
-				return n4d.responses.build_failed_call_response(ret_msg=ret["msg"])
+				return n4d.responses.build_failed_call_response(TeacherShare.SEND_TO_TEACHER_ERROR,ret["msg"])
 		except Exception as e:
-			return n4d.responses.build_failed_call_response(ret_msg=str(e))
+			return n4d.responses.build_failed_call_response(TeacherShare.SEND_TO_TEACHER_ERROR,str(e))
 					
 		if to_user in paths:
 			path,name,ip,port=paths[to_user]
-			#path=path.encode("utf8")
-			#name=name.encode("utf8")
 			try:
 				src=file_path.decode("utf-8")
 				queue=multiprocessing.Queue()
@@ -57,20 +57,20 @@ class TeacherShare:
 				p.start()
 				p.join()
 				if not queue.get():
-					return n4d.responses.build_failed_call_response()
+					return n4d.responses.build_failed_call_response(TeacherShare.QUEUE_ERROR)
 				else:
-					return n4d.responses.build_successful_call_response(TeacherShare.QUEUE_ERROR)
+					return n4d.responses.build_successful_call_response()
 				
 			except Exception as e:
 				print(e)
 				return n4d.responses.build_failed_call_response(TeacherShare.SEND_TO_TEACHER_ERROR,str(e))
 				
 	#def send_to_teacher_net
+
 	
 	def copy_file_as_user(self,src,from_ip,to_ip,from_user,to_user,delete,queue):
 		
 		try:	
-			#server=ServerProxy("https://"+to_ip+":9779")
 			context=ssl._create_unverified_context()
 			server=xmlrpc.client.ServerProxy("https://"+to_ip+":9779",context=context)
 			ret=server.grab_file("","TeacherShare",from_user,from_ip,src)
@@ -92,7 +92,6 @@ class TeacherShare:
 		if self.credentials:
 			teacher_uid=pwd.getpwnam(self.credentials[0])[2]
 			teacher_gid=pwd.getpwnam(self.credentials[0])[3]
-			#server=ServerProxy("https://localhost:9779")
 			context=ssl._create_unverified_context()
 			server=xmlrpc.client.ServerProxy("https://localhost:9779",context=context)
 			if self.credentials:
@@ -104,17 +103,15 @@ class TeacherShare:
 						os.chown(dest,teacher_uid,teacher_gid)
 						return n4d.responses.build_successful_call_response()
 					else:
-						print(ret["msg"])
 						e=Exception(ret["msg"])
 						raise e
 				except Exception as e:
-					print(e)
 					return n4d.responses.build_failed_call_response(TeacherShare.GRAB_FILE_ERROR,str(e))
 		else:
-			print("No credentials found")
 			return n4d.responses.build_failed_call_response(TeacherShare.CREDENTIALS_ERROR,str(e))
 			
 	#def grab_file
+
 
 	def register_share_info(self,user,pwd,path):
 		
