@@ -13,20 +13,16 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fexceptions")
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -foperator-names")
 
 find_package(EdupalsBase REQUIRED)
-#find_package(EdupalsN4D REQUIRED)
-#find_package(EdupalsN4DAgent REQUIRED)
 
 include(KDEInstallDirs)
 
-#kcoreaddons_add_plugin(harvesterteacherplugin SOURCES harvesterteacherplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
-#kcoreaddons_desktop_to_json(harvesterteacherplugin harvesterteacherplugin.desktop) # generate the json file
+kcoreaddons_add_plugin(harvesterteacherplugin SOURCES harvesterteacherplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
 
-#target_link_libraries(harvesterteacherplugin KF5::KIOWidgets)
+target_link_libraries(harvesterteacherplugin KF5::KIOWidgets)
 
-#kcoreaddons_add_plugin(harvesterstudentplugin SOURCES harvesterstudentplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
-#kcoreaddons_desktop_to_json(harvesterstudentplugin harvesterstudentplugin.desktop) # generate the json file
+kcoreaddons_add_plugin(harvesterstudentplugin SOURCES harvesterstudentplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
 
-#target_link_libraries(harvesterstudentplugin KF5::KIOWidgets)
+target_link_libraries(harvesterstudentplugin KF5::KIOWidgets)
 
 add_executable(llx-homework-student studentapp.cpp ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
 target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets Qt5::Quick Edupals::Base)

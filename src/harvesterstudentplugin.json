@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Icon": "application-x-cd-image",
+        "MimeTypes": [
+            "application/octet-stream"
+        ],
+        "Name": "Lliurex homework harvester student plugin",
+        "ServiceTypes": [
+            "KFileItemAction/Plugin"
+        ]
+    },
+    "MimeType": "application/octet-stream;"
+}
