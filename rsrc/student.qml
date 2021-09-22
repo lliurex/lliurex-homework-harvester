@@ -84,7 +84,8 @@ QQC2.Pane {
         
         onError: {
             console.log("n4d error:\n",what);
-            msg.text=i18nd("lliurex-homework-harvester","Can not list shares");
+            msg.type=Kirigami.MessageType.Error;
+            msg.text=i18nd("lliurex-homework-harvester","Unable to list shares: %1",code);
             msg.visible=true;
         }
     }
@@ -98,7 +99,7 @@ QQC2.Pane {
         onResponse: {
             queue.remove(0);
             if (queue.count>0) {
-                lblProgress.text="Sending files "+queue.count+" from "+modelFiles.count;
+                lblProgress.text=i18nd("lliurex-homework-harvester","Sending file %1 from %2",1+modelFiles.count-queue.count,modelFiles.count);
                 pbar.value = 1.0-(queue.count/modelFiles.count);
                 
                 console.log("sending:",queue.get(0).name);
@@ -106,7 +107,7 @@ QQC2.Pane {
             }
             else {
                 msg.type=Kirigami.MessageType.Positive;
-                msg.text=i18nd("lliurex-homework-harvester","Files sent!");
+                msg.text=i18nd("lliurex-homework-harvester","Files successfully sent");
                 msg.visible=true;
                 progress.visible=false;
             }
@@ -115,7 +116,7 @@ QQC2.Pane {
         onError: {
             console.log("n4d error:\n",what);
             msg.type=Kirigami.MessageType.Error;
-            msg.text=i18nd("lliurex-homework-harvester","Error sending files");
+            msg.text=i18nd("lliurex-homework-harvester","Error sending files: %1",code);
             msg.visible=true;
             progress.visible=false;
         }
@@ -141,8 +142,7 @@ QQC2.Pane {
             }
         }
         onRejected: {
-            console.log("Canceled")
-            //Qt.exit(0)
+            console.log("Canceled");
         }
         
     }
@@ -169,11 +169,9 @@ QQC2.Pane {
         
         ListView {
             id: listFiles
-            //Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
             Layout.preferredWidth: 250
             Layout.preferredHeight: 300
-            //Layout.fillHeight: true
             
             model:modelFiles
             highlightFollowsCurrentItem: true
@@ -209,7 +207,6 @@ QQC2.Pane {
         }
         
         ListView {
-            //Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
             Layout.preferredWidth: 250
             Layout.preferredHeight: 100
@@ -231,14 +228,11 @@ QQC2.Pane {
             QQC2.ProgressBar {
                 id: pbar
                 Layout.fillWidth: true
-                
-            
             }
             
             QQC2.Label {
                 id: lblProgress
                 Layout.fillWidth: true
-                
             }
         }
         
@@ -248,7 +242,6 @@ QQC2.Pane {
             Layout.minimumHeight:32
             
             id: msg
-            //type: Kirigami.MessageType.Error
         }
         
         RowLayout {
@@ -273,7 +266,7 @@ QQC2.Pane {
                     msg.visible=false;
                     btnSend.enabled=false;
                     progress.visible=true;
-                    lblProgress.text="Sending files "+queue.count+" from "+modelFiles.count;
+                    lblProgress.text=i18nd("lliurex-homework-harvester","Sending file %1 from %2",1,modelFiles.count);
                     
                     console.log("sending:",queue.get(0).name);
                     send_to_teacher.call([userName,modelTeachers.get(modelTeachers.currentIndex).name,queue.get(0).path]);
@@ -282,7 +275,7 @@ QQC2.Pane {
             }
             
             QQC2.Button {
-                text:i18nd("lliurex-homework-harvester","Cancel")
+                text:i18nd("lliurex-homework-harvester","Close")
                 
                 onClicked: {
                     Qt.exit(0);

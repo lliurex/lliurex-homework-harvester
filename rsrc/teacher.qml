@@ -70,8 +70,6 @@ QQC2.Pane {
                 method:"validate_auth"
                 
                 onResponse: {
-                    //console.log("status",value[0]);
-                    //console.log("status",value[1]);
                     passwordField.enabled = true;
                     main.pswd = passwordField.text;
                     passwordField.text = "";
@@ -80,7 +78,13 @@ QQC2.Pane {
                 
                 onError: {
                     console.log("n4d error:\n",what);
-                    errorLogin.text = i18nd("lliurex-homework-harvester","Login failed");
+                    
+                    if (code==N4D.Error.AuthenticationFailed) {
+                        errorLogin.text = i18nd("lliurex-homework-harvester","Authentication failed");
+                    }
+                    else {
+                        errorLogin.text = i18nd("lliurex-homework-harvester","Login failed: %1",code);
+                    }
                     errorLogin.visible = true;
                     passwordField.enabled = true;
                     passwordField.text = "";
@@ -91,12 +95,11 @@ QQC2.Pane {
                 anchors.fill:parent
                 
                 QQC2.Label {
-                    
-                    text:i18nd("lliurex-homework-harvester","homework harvester needs your teacher password to perform this action")
-                    wrapMode:Text.WordWrap
-                    //anchors.verticalCenter: userField.verticalCenter
                     Layout.alignment: Qt.AlignHCenter
                     Layout.fillWidth:true
+                    text:i18nd("lliurex-homework-harvester","Homework harvester needs your teacher password to perform this action")
+                    wrapMode:Text.WordWrap
+                    
                 }
                 
                 Kirigami.Icon {
@@ -148,7 +151,6 @@ QQC2.Pane {
                         
                         onClicked: {
                             passwordField.enabled = false;
-                            //n4dLocal.password = passwordField.text
                             validate_auth.call([[userName,passwordField.text]]);
                         }
                     }
@@ -157,7 +159,7 @@ QQC2.Pane {
                         text: i18nd("lliurex-homework-harvester","Close")
                         
                         onClicked: {
-                            Qt.exit(-1);
+                            Qt.exit(0);
                         }
                     }
                 }
@@ -198,8 +200,6 @@ QQC2.Pane {
                 
                 onError: {
                     console.log("n4d error:\n",what);
-                    errorLabel.text=what;
-                    errorLabel.visible=true;
                 }
             }
             
@@ -223,7 +223,7 @@ QQC2.Pane {
                 
                 onError: {
                     console.log("n4d error:\n",what);
-                    errorLabel.text=i18nd("lliurex-homework-harvester","Error checking share status");
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Error checking share status: %1",code);
                     errorLabel.visible=true;
                 }
             }
@@ -245,7 +245,7 @@ QQC2.Pane {
                 
                 onError: {
                     console.log("n4d error:\n",what);
-                    errorLabel.text=i18nd("lliurex-homework-harvester","Can not add share");
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Unable to add share: %1",code);
                     errorLabel.visible=true;
                 }
             }
@@ -265,7 +265,7 @@ QQC2.Pane {
                 
                 onError: {
                     console.log("n4d error:\n",what);
-                    errorLabel.text=i18nd("lliurex-homework-harvester","Can not remove share");
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Unable to remove share: %1");
                     errorLabel.visible=true;
                 }
             }
@@ -283,13 +283,12 @@ QQC2.Pane {
                 onError: {
                     console.log("n4d error:\n",what);
                     errorLabel.type=Kirigami.MessageType.Error;
-                    errorLabel.text=i18nd("lliurex-homework-harvester","Can not register share");
+                    errorLabel.text=i18nd("lliurex-homework-harvester","Unable to register share: %1",code);
                     errorLabel.visible=true;
                 }
             }
             
             Component.onCompleted: {
-                console.log("Completed!");
                 n4d.user = userName;
                 n4d.password = main.pswd;
                 n4dLocal.user = userName;
@@ -377,7 +376,7 @@ QQC2.Pane {
                         text: i18nd("lliurex-homework-harvester","Close")
                         
                         onClicked: {
-                            Qt.exit(-1);
+                            Qt.exit(0);
                         }
                     }
                 }

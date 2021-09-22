@@ -26,6 +26,7 @@
 #include <QQuickView>
 #include <QQmlContext>
 #include <QQmlEngine>
+#include <QScreen>
 #include <QDebug>
 
 #include <iostream>
@@ -73,6 +74,7 @@ int main(int argc,char* argv[])
     QQuickView *view = new QQuickView;
     view->setMinimumSize(QSize(400,360));
     view->setMaximumSize(QSize(400,360));
+    
     QQmlContext* ctxt = view->rootContext();
     QObject::connect(ctxt->engine(),&QQmlEngine::exit,&app,&QCoreApplication::exit);
     ctxt->setContextProperty("teacherTarget",target);
@@ -84,6 +86,11 @@ int main(int argc,char* argv[])
     
     view->show();
     
+    // center on screen
+    QScreen* screen = view->screen();
+    uint32_t x = screen->geometry().width()/2 - view->frameGeometry().width()/2;
+    uint32_t y = screen->geometry().height()/2 - view->frameGeometry().height()/2;
+    view->setPosition(x,y);
+    
     return app.exec();
-
 }
