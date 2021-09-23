@@ -17,8 +17,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//#include "studentwindow.hpp"
-
 #include <user.hpp>
 
 #include <QApplication>
@@ -29,11 +27,11 @@
 #include <QQuickView>
 #include <QQmlEngine>
 #include <QQmlContext>
+#include <QIcon>
 #include <QDebug>
 
 #include <iostream>
 
-//using namespace harvester;
 using namespace edupals;
 using namespace std;
 
@@ -53,6 +51,7 @@ int main(int argc,char* argv[])
     parser.process(app);
     
     QQuickView *view = new QQuickView;
+    view->setIcon(QIcon::fromTheme("lliurex-homework-harvester"));
     view->setMinimumSize(QSize(400,600));
     view->setMaximumSize(QSize(400,600));
     
@@ -60,12 +59,12 @@ int main(int argc,char* argv[])
     
     const QStringList files = parser.positionalArguments();
     
-    qDebug()<<"Files:";
+    clog<<"Files:"<<endl;
     QList<QVariant> absFiles;
     
     for (QString name:files) {
         QFileInfo info(name);
-        qDebug()<<info.absoluteFilePath();
+        clog<<info.absoluteFilePath().toStdString()<<endl;
         absFiles.append(info.absoluteFilePath());
     }
     
@@ -76,7 +75,6 @@ int main(int argc,char* argv[])
     QObject::connect(ctxt->engine(),&QQmlEngine::exit,&app,&QCoreApplication::exit);
     view->setSource(QUrl(QStringLiteral("qrc:/student.qml")));
     view->show();
+    
     return app.exec();
-    //student::Window win(parser.positionalArguments());
-
 }

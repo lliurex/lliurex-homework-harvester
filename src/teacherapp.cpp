@@ -27,12 +27,13 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QScreen>
+#include <QIcon>
 #include <QDebug>
 
 #include <iostream>
 
-using namespace std;
 using namespace edupals;
+using namespace std;
 
 int main(int argc,char* argv[])
 {
@@ -72,6 +73,7 @@ int main(int argc,char* argv[])
     }
     
     QQuickView *view = new QQuickView;
+    view->setIcon(QIcon::fromTheme("lliurex-homework-harvester"));
     view->setMinimumSize(QSize(400,360));
     view->setMaximumSize(QSize(400,360));
     
