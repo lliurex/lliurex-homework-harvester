@@ -30,6 +30,7 @@ target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets Qt5::Quick Edu
 add_executable(llx-homework-teacher teacherapp.cpp ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
 target_link_libraries(llx-homework-teacher Qt5::Core Qt5::Widgets Qt5::Quick Edupals::Base)
 
+install(TARGETS llx-homework-student llx-homework-teacher RUNTIME DESTINATION bin)
 
 add_custom_target(
     po
