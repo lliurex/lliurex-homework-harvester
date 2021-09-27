@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-26 12:58+0100\n"
+"POT-Creation-Date: 2021-09-22 13:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,114 +17,105 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: 1.py:88
-msgid "This folder is already configured to receive homeworks."
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:88
+msgid "Unable to list shares: %1"
 msgstr ""
 
-#: 1.py:96
-msgid "Error connecting to server"
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:102
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:269
+msgid "Sending file %1 from %2"
 msgstr ""
 
-#: 1.py:116
-msgid "Folder is ready to receive homeworks. You may close the window"
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:110
+msgid "Files successfully sent"
 msgstr ""
 
-#: 1.py:132
-msgid "Folder has been removed from the service."
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:119
+msgid "Error sending files: %1"
 msgstr ""
 
-#: 1.py:174
-msgid "Error getting IP"
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:136
+msgid "Select files"
 msgstr ""
 
-#: 2.py:97
-msgid "Files have been sent to "
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:167
+msgid "Files"
 msgstr ""
 
-#: 2.py:113
-msgid "File"
-msgstr ""
-
-#: 2.py:126
-msgid "Where"
-msgstr ""
-
-#: 2.py:129
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:206
 msgid "Teacher"
 msgstr ""
 
-#: 2.py:202
-msgid "Open..."
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:253
+msgid "Send"
 msgstr ""
 
-#: 2.py:253
-msgid "Please, select a destination first."
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/student.qml:278
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:159
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:376
+msgid "Close"
 msgstr ""
 
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/lib/nautilus/extensions-2.0/python/lliurex-homework-harverster-extension.py:100
-msgid "Set this folder to receive homeworks..."
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:83
+msgid "Authentication failed"
 msgstr ""
 
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/lib/nautilus/extensions-2.0/python/lliurex-homework-harverster-extension.py:101
-msgid "Set this folder to receive homeworks"
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:86
+msgid "Login failed: %1"
 msgstr ""
 
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/lib/nautilus/extensions-2.0/python/lliurex-homework-harverster-extension.py:118
-msgid "Send file to teacher..."
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:100
+msgid "Homework harvester needs your teacher password to perform this action"
 msgstr ""
 
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/lib/nautilus/extensions-2.0/python/lliurex-homework-harverster-extension.py:119
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:150
+msgid "Login"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:226
+msgid "Error checking share status: %1"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:241
+msgid "Shared directory added"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:248
+msgid "Unable to add share: %1"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:262
+msgid "Shared directory removed"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:268
+msgid "Unable to remove share: %1"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:286
+msgid "Unable to register share: %1"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:309
+msgid "Adding the following folder as destination"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:313
+msgid "Removing the following folder as destination"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:349
+msgid "Add"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/rsrc/teacher.qml:353
+msgid "Delete"
+msgstr ""
+
+#: /home/quique/workspace/lliurex-homework-harvester/src/harvesterstudentplugin.cpp:39
 msgid "Send file to teacher"
 msgstr ""
 
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:6
-msgid "Lliurex Homework Sender"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:34
-msgid "Files to send:"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:96
-msgid "Add file"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:131
-msgid "Remove file"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:170
-msgid "Select teacher:"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/ClientSide.glade:313
-msgid "<b>Send files to teacher...</b>"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:7
-msgid "Lliurex Homework Harvester"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:57
-msgid "Folder"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:111
-msgid "Name"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:165
-msgid "User"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:222
-msgid "Password"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:270
-msgid "Enter your password and press Apply"
-msgstr ""
-
-#: /srv/svn/leia/llx-apps/trunk/lliurex-homework-harvester/install-files/usr/share/lliurex-homework-harvester/rsrc/TeacherSide.glade:302
-msgid "<b>Lliurex Homework Harvester</b>"
+#: /home/quique/workspace/lliurex-homework-harvester/src/harvesterteacherplugin.cpp:39
+msgid "Set this folder to receive homeworks"
 msgstr ""

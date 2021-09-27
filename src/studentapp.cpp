@@ -17,14 +17,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "studentwindow.hpp"
+#include <user.hpp>
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QFileInfo>
+#include <QList>
+#include <QVariant>
+#include <QQuickView>
+#include <QQmlEngine>
+#include <QQmlContext>
+#include <QIcon>
+#include <QDebug>
 
 #include <iostream>
 
-using namespace harvester;
+using namespace edupals;
 using namespace std;
 
 int main(int argc,char* argv[])
@@ -42,9 +50,31 @@ int main(int argc,char* argv[])
     
     parser.process(app);
     
-    student::Window win(parser.positionalArguments());
+    QQuickView *view = new QQuickView;
+    view->setIcon(QIcon::fromTheme("lliurex-homework-harvester"));
+    view->setMinimumSize(QSize(400,600));
+    view->setMaximumSize(QSize(400,600));
     
-    app.exec();
+    QQmlContext* ctxt = view->rootContext();
     
-    return 0;
+    const QStringList files = parser.positionalArguments();
+    
+    clog<<"Files:"<<endl;
+    QList<QVariant> absFiles;
+    
+    for (QString name:files) {
+        QFileInfo info(name);
+        clog<<info.absoluteFilePath().toStdString()<<endl;
+        absFiles.append(info.absoluteFilePath());
+    }
+    
+    ctxt->setContextProperty("files",absFiles);
+    
+    system::User me = system::User::me();
+    ctxt->setContextProperty("userName",QString::fromStdString(me.name));
+    QObject::connect(ctxt->engine(),&QQmlEngine::exit,&app,&QCoreApplication::exit);
+    view->setSource(QUrl(QStringLiteral("qrc:/student.qml")));
+    view->show();
+    
+    return app.exec();
 }

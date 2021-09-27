@@ -1,6 +1,0 @@
-[Desktop Entry]
-Type=Service
-Name=Lliurex homework harvester student plugin
-X-KDE-Library=harvesterstudentplugin
-X-KDE-ServiceTypes=KFileItemAction/Plugin
-MimeType=application/octet-stream;

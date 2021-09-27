@@ -17,15 +17,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "teacherwindow.hpp"
+#include <user.hpp>
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QFileInfo>
+#include <QDir>
+#include <QQuickView>
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QScreen>
+#include <QIcon>
 #include <QDebug>
 
 #include <iostream>
 
-using namespace harvester;
+using namespace edupals;
 using namespace std;
 
 int main(int argc,char* argv[])
@@ -39,35 +46,53 @@ int main(int argc,char* argv[])
     parser.setApplicationDescription("LliureX Homework Harvester teacher gui");
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument("action", "action to do (add | del)");
-    parser.addPositionalArgument("destination", "folder to share");
+    parser.addPositionalArgument("target", "folder to share");
     
     parser.process(app);
     
+    QString target;
+    
     const QStringList args = parser.positionalArguments();
     
-    if (args.size()<2) {
+    if (args.size()<1) {
         parser.showHelp(0);
     }
     
-    teacher::Action action;
+    target = args[0];
     
-    if (args[0]=="add") {
-       action=teacher::Action::Add;
+    QFileInfo info(target);
+    
+    if (!info.exists() or !info.isDir()) {
+        cerr<<"Error: target "<<target.toStdString()<<" is not a folder"<<endl;
+        return 3;
     }
     else {
-        if (args[0]=="del") {
-            action=teacher::Action::Delete;
-        }
-        else {
-            cerr<<"Error: expected action: add or del, not "<<args[0].toStdString()<<endl;
-            
-            return 1;
-        }
+        clog<<"folder:"<<target.toStdString()<<endl;
+        target=info.absoluteFilePath();
+        clog<<"folder:"<<target.toStdString()<<endl;
     }
-    teacher::Window win(action,args[1]);
     
-    app.exec();
+    QQuickView *view = new QQuickView;
+    view->setIcon(QIcon::fromTheme("lliurex-homework-harvester"));
+    view->setMinimumSize(QSize(400,360));
+    view->setMaximumSize(QSize(400,360));
     
-    return 0;
+    QQmlContext* ctxt = view->rootContext();
+    QObject::connect(ctxt->engine(),&QQmlEngine::exit,&app,&QCoreApplication::exit);
+    ctxt->setContextProperty("teacherTarget",target);
+    
+    system::User me = system::User::me();
+    ctxt->setContextProperty("userName",QString::fromStdString(me.name));
+    
+    view->setSource(QUrl(QStringLiteral("qrc:/teacher.qml")));
+    
+    view->show();
+    
+    // center on screen
+    QScreen* screen = view->screen();
+    uint32_t x = screen->geometry().width()/2 - view->frameGeometry().width()/2;
+    uint32_t y = screen->geometry().height()/2 - view->frameGeometry().height()/2;
+    view->setPosition(x,y);
+    
+    return app.exec();
 }
