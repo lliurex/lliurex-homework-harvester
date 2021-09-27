@@ -1,3 +1,10 @@
+lliurex-homework-harvester (1.0.0.0) focal; urgency=medium
+
+  * Master tag: 7ae43a5501cfac2779429fe76592a1ad63177422
+  * UI reworked using qml, dont expect a stable release here
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Mon, 27 Sep 2021 11:47:14 +0200
+
 lliurex-homework-harvester (0.10) focal; urgency=medium
 
   * First focal release
