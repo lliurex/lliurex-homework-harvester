@@ -19,7 +19,9 @@
 
 #include "harvesterstudentplugin.hpp"
 #include "locale.hpp"
-#include "util.hpp"
+
+#include <user.hpp>
+#include <group.hpp>
 
 #include <KFileItem>
 #include <QString>
@@ -28,6 +30,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace edupals::system;
 using namespace lliurex::locale;
 
 HarvesterStudentPlugin::HarvesterStudentPlugin(QObject* parent, const QVariantList& list) : KAbstractFileItemActionPlugin(parent)
@@ -57,7 +60,7 @@ void HarvesterStudentPlugin::triggered(bool checked)
     
     QProcess child;
     
-    child.setProgram("/usr/bin/lliurex-homework-sender");
+    child.setProgram("/usr/bin/llx-homework-student");
     child.setArguments(args);
     child.startDetached(nullptr);
     
@@ -67,12 +70,12 @@ QList<QAction* > HarvesterStudentPlugin::actions(const KFileItemListProperties& 
 {
     QList<QAction*> list;
     
-    vector<string> groups = getUserGroups();
+    vector<Group> groups = User::me().groups();
     
     bool isStudent=false;
     
-    for (string group : groups) {
-        if (group=="students") {
+    for (Group& group : groups) {
+        if (group.name=="students") {
             isStudent=true;
             break;
         }

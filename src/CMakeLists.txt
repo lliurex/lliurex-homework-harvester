@@ -18,11 +18,11 @@ include(KDEInstallDirs)
 
 kcoreaddons_add_plugin(harvesterteacherplugin SOURCES harvesterteacherplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
 
-target_link_libraries(harvesterteacherplugin KF5::KIOWidgets)
+target_link_libraries(harvesterteacherplugin KF5::KIOWidgets Edupals::Base)
 
 kcoreaddons_add_plugin(harvesterstudentplugin SOURCES harvesterstudentplugin.cpp INSTALL_NAMESPACE "kf5/kfileitemaction")
 
-target_link_libraries(harvesterstudentplugin KF5::KIOWidgets)
+target_link_libraries(harvesterstudentplugin KF5::KIOWidgets Edupals::Base)
 
 add_executable(llx-homework-student studentapp.cpp ${CMAKE_SOURCE_DIR}/rsrc/resources.qrc)
 target_link_libraries(llx-homework-student Qt5::Core Qt5::Widgets Qt5::Quick Edupals::Base)
