@@ -1,2 +1,3 @@
-n4d-homeworkharvester-server/*	/
+etc/n4d/conf.d/TeacherShareManager.json
+usr/share/n4d/python-plugins/TeacherShareManager.py
 
