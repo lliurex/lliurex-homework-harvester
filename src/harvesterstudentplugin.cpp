@@ -70,33 +70,38 @@ QList<QAction* > HarvesterStudentPlugin::actions(const KFileItemListProperties& 
 {
     QList<QAction*> list;
     
-    vector<Group> groups = User::me().groups();
-    
-    bool isStudent=false;
-    
-    for (Group& group : groups) {
-        if (group.name=="students") {
-            isStudent=true;
-            break;
-        }
-    }
-    
-    if (isStudent) {
-        KFileItemList files = fileItemInfos.items();
-        target.clear();
-        
-        list.append(actionSend);
-        
-        for (int n=0;n<files.size();n++) {
-            KFileItem& item = files[n];
-            
-            if  (item.isFile()) {
-                target.push_back(item.targetUrl());
+    try {
+        vector<Group> groups = User::me().groups();
+
+        bool isStudent=false;
+
+        for (Group& group : groups) {
+            if (group.name=="students") {
+                isStudent=true;
+                break;
             }
         }
-    
+
+        if (isStudent) {
+            KFileItemList files = fileItemInfos.items();
+            target.clear();
+
+            list.append(actionSend);
+
+            for (int n=0;n<files.size();n++) {
+                KFileItem& item = files[n];
+
+                if  (item.isFile()) {
+                    target.push_back(item.targetUrl());
+                }
+            }
+
+        }
     }
-    
+    catch(std::exception& e) {
+        cerr<<"warning:\n"<<e.what()<<endl;
+    }
+
     return list;
 }
 

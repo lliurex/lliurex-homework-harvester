@@ -63,31 +63,36 @@ void HarvesterTeacherPlugin::triggered(bool checked)
 QList<QAction* > HarvesterTeacherPlugin::actions(const KFileItemListProperties& fileItemInfos, QWidget* parentWidget)
 {
     QList<QAction*> list;
-    
-    KFileItemList files = fileItemInfos.items();
-    
-    /* we are not interested in multiple selections */
-    if (files.size()>1) {
-        return list;
-    }
-    
-    vector<Group> groups = User::me().groups();
-    
-    bool isTeacher=false;
-    
-    for (Group& group : groups) {
-        if (group.name=="teachers") {
-            isTeacher=true;
-            break;
+
+    try {
+        KFileItemList files = fileItemInfos.items();
+
+        /* we are not interested in multiple selections */
+        if (files.size()>1) {
+            return list;
+        }
+
+        vector<Group> groups = User::me().groups();
+
+        bool isTeacher=false;
+
+        for (Group& group : groups) {
+            if (group.name=="teachers") {
+                isTeacher=true;
+                break;
+            }
+        }
+
+        if (isTeacher and fileItemInfos.isDirectory() and fileItemInfos.supportsWriting()) {
+            list.append(actionReceive);
+
+            target = files.first().targetUrl();
         }
     }
-    
-    if (isTeacher and fileItemInfos.isDirectory() and fileItemInfos.supportsWriting()) {
-        list.append(actionReceive);
-
-        target = files.first().targetUrl();
+    catch(std::exception& e) {
+        cerr<<"warning:\n"<<e.what()<<endl;
     }
-    
+
     return list;
 }
 
