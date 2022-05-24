@@ -1,3 +1,10 @@
+lliurex-homework-harvester (1.0.2.0) focal; urgency=medium
+
+  * Master tag: a4d02f9fa27493d4cfe6993a162c128ad6e08965
+  * Dolphin plugins not throwing exceptions
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Tue, 24 May 2022 13:01:44 +0200
+
 lliurex-homework-harvester (1.0.1.0) focal; urgency=medium
 
   * Master tag: 6a7243d478e05412d212f016a4b8682809b2cf7b
