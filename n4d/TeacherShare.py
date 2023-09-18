@@ -7,6 +7,7 @@ import multiprocessing
 import socket 
 import ssl
 import xmlrpc.client
+import shutil
 
 import n4d.responses
 
@@ -28,7 +29,12 @@ class TeacherShare:
 
 	def send_to_teacher_net(self,from_user,to_user,file_path):
 
-		file_path=file_path.encode("utf8")
+		#Copy send file in /tmp so than can be sent to teacher in case it is in a folder with restriced access only to ownwer
+		dest_path=os.path.join("/tmp",os.path.basename(file_path))
+		shutil.copy(file_path,dest_path)
+		cmd="chmod 744 %s"%dest_path
+		os.system(cmd)
+		file_path=dest_path.encode("utf8")
 		
 		#Get ip from user
 		s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
@@ -57,12 +63,15 @@ class TeacherShare:
 				p.start()
 				p.join()
 				if not queue.get():
+					os.remove(dest_path)
 					return n4d.responses.build_failed_call_response(TeacherShare.QUEUE_ERROR)
 				else:
+					os.remove(dest_path)
 					return n4d.responses.build_successful_call_response()
 				
 			except Exception as e:
 				print(e)
+				os.remove(dest_path)
 				return n4d.responses.build_failed_call_response(TeacherShare.SEND_TO_TEACHER_ERROR,str(e))
 				
 	#def send_to_teacher_net
