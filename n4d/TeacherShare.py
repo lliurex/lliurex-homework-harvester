@@ -32,8 +32,13 @@ class TeacherShare:
 		#Copy send file in /tmp so than can be sent to teacher in case it is in a folder with restriced access only to ownwer
 		dest_path=os.path.join("/tmp",os.path.basename(file_path))
 		shutil.copy(file_path,dest_path)
-		cmd="chmod 744 %s"%dest_path
-		os.system(cmd)
+		try:
+			os.chmod(dest_path,0o744)
+		except Exception as e:
+			os.remove(dest_path)
+			return n4d.responses.build_failed_call_response(TeacherShare.SEND_TO_TEACHER_ERROR,str(e))
+
+
 		file_path=dest_path.encode("utf8")
 		
 		#Get ip from user
