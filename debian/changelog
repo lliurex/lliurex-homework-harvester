@@ -1,3 +1,10 @@
+lliurex-homework-harvester (1.0.2.1) focal; urgency=medium
+
+  * Copying files to /tmp to avoid certain paths (onedrive) being inaccessible
+    to teachers when trying to get files from students.
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 05 Oct 2023 10:36:18 +0200
+
 lliurex-homework-harvester (1.0.2.0) focal; urgency=medium
 
   * Master tag: a4d02f9fa27493d4cfe6993a162c128ad6e08965
