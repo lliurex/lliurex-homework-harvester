@@ -103,7 +103,8 @@ QQC2.Pane {
                 pbar.value = 1.0-(queue.count/modelFiles.count);
                 
                 console.log("sending:",queue.get(0).name);
-                send_to_teacher.call([userName,modelTeachers.get(modelTeachers.currentIndex).name,queue.get(0).path]);
+                console.log("send to2 ",modelTeachers.get(listTeachers.currentIndex).name);
+                send_to_teacher.call([userName,modelTeachers.get(listTeachers.currentIndex).name,queue.get(0).path]);
             }
             else {
                 msg.type=Kirigami.MessageType.Positive;
@@ -138,7 +139,10 @@ QQC2.Pane {
         onAccepted: {
             console.log("You chose: " + fileDialog.fileUrls)
             for (var n=0;n<fileDialog.fileUrls.length;n++) {
-                insertFile(fileDialog.fileUrls[n]);
+                var tmpFile=fileDialog.fileUrls[n].toString();
+                tmpFile=tmpFile.replace(/^(file:\/{2})/,"");
+                var newFile=decodeURIComponent(tmpFile);
+                insertFile(newFile);
             }
         }
         onRejected: {
@@ -207,6 +211,7 @@ QQC2.Pane {
         }
         
         ListView {
+            id:listTeachers
             Layout.fillWidth: true
             Layout.preferredWidth: 250
             Layout.preferredHeight: 100
@@ -261,7 +266,7 @@ QQC2.Pane {
                         queue.append(modelFiles.get(n));
                     }
                     
-                    console.log("send to ",modelTeachers.get(modelTeachers.currentIndex).name);
+                   console.log("send to ",modelTeachers.get(listTeachers.currentIndex).name);
                     
                     msg.visible=false;
                     btnSend.enabled=false;
@@ -269,7 +274,7 @@ QQC2.Pane {
                     lblProgress.text=i18nd("lliurex-homework-harvester","Sending file %1 from %2",1,modelFiles.count);
                     
                     console.log("sending:",queue.get(0).name);
-                    send_to_teacher.call([userName,modelTeachers.get(modelTeachers.currentIndex).name,queue.get(0).path]);
+                    send_to_teacher.call([userName,modelTeachers.get(listTeachers.currentIndex).name,queue.get(0).path]);
                 }
                 
             }
