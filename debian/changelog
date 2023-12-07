@@ -1,3 +1,9 @@
+lliurex-homework-harvester (1.0.2.1.23) jammy; urgency=medium
+
+  * First jammy release 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 07 Dec 2023 09:17:58 +0100
+
 lliurex-homework-harvester (1.0.2.1) focal; urgency=medium
 
   * Copying files to /tmp to avoid certain paths (onedrive) being inaccessible
