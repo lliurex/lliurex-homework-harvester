@@ -1,3 +1,9 @@
+lliurex-homework-harvester (1.0.2.2) focal; urgency=medium
+
+  * Checked if tmp file exists before remove it
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 20 Dec 2023 16:30:14 +0100
+
 lliurex-homework-harvester (1.0.2.1) focal; urgency=medium
 
   * Copying files to /tmp to avoid certain paths (onedrive) being inaccessible
