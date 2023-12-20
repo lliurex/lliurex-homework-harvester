@@ -35,7 +35,8 @@ class TeacherShare:
 		try:
 			os.chmod(dest_path,0o744)
 		except Exception as e:
-			os.remove(dest_path)
+			if os.path.exists(dest_path):
+				os.remove(dest_path)
 			return n4d.responses.build_failed_call_response(TeacherShare.SEND_TO_TEACHER_ERROR,str(e))
 
 
@@ -68,15 +69,18 @@ class TeacherShare:
 				p.start()
 				p.join()
 				if not queue.get():
-					os.remove(dest_path)
+					if os.path.exists(dest_path):
+						os.remove(dest_path)
 					return n4d.responses.build_failed_call_response(TeacherShare.QUEUE_ERROR)
 				else:
-					os.remove(dest_path)
+					if os.path.exists(dest_path):
+						os.remove(dest_path)
 					return n4d.responses.build_successful_call_response()
 				
 			except Exception as e:
 				print(e)
-				os.remove(dest_path)
+				if os.path.exists(dest_path):
+					os.remove(dest_path)
 				return n4d.responses.build_failed_call_response(TeacherShare.SEND_TO_TEACHER_ERROR,str(e))
 				
 	#def send_to_teacher_net
