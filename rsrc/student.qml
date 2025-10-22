@@ -23,14 +23,14 @@
 
 import Edupals.N4D 1.0 as N4D
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.kirigami 2.16 as Kirigami
+import org.kde.plasma.core  as PlasmaCore
+import org.kde.kirigami  as Kirigami
 
-import QtQuick 2.6
-import QtQuick.Controls 2.6 as QQC2
-import QtQuick.Layouts 1.15
-import QtQuick.Dialogs 1.0
-import QtQml.Models 2.1
+import QtQuick 
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts 
+import QtQuick.Dialogs 
+import QtQml.Models
 
 QQC2.Pane {
     id: mainPane
