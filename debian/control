@@ -2,12 +2,12 @@ Source: lliurex-homework-harvester
 Section: misc
 Priority: standard
 Maintainer: Equipo LliureX <lliurex@gva.es>
-Build-Depends: debhelper (>= 7), cmake, extra-cmake-modules, libkf5coreaddons-dev, libkf5kio-dev, python3-poinstaller, qtbase5-dev, qtdeclarative5-dev, libedupals-base-dev
+Build-Depends: debhelper (>= 7), cmake, extra-cmake-modules, libkf6coreaddons-dev, libkf6kio-dev, python3-poinstaller, qt6-base-dev, qt6-declarative-dev, libedupals-base-dev
 Standards-Version: 3.9.3
 
 Package: lliurex-homework-harvester
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, python3, n4d(>=0.900)
+Depends: ${shlibs:Depends}, ${misc:Depends}, python3, n4d(>=0.900),qml6-module-org-kde-kcoreaddons
 Description:  Application to send files to teachers
  Application to send files to teachers with a right click.
 

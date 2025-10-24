@@ -75,14 +75,14 @@ QQC2.Pane {
         plugin: "TeacherShareManager"
         method:"get_paths"
         
-        onResponse: {
+        onResponse:(value)=> {
             for (var key in value) {
                 console.log(key,":",value[key]);
                 modelTeachers.append({"name":key});
             }
         }
         
-        onError: {
+        onError:(what,code)=> {
             console.log("n4d error:\n",what);
             msg.type=Kirigami.MessageType.Error;
             msg.text=i18nd("lliurex-homework-harvester","Unable to list shares: %1",code);
@@ -114,7 +114,7 @@ QQC2.Pane {
             }
         }
         
-        onError: {
+        onError:(what,code) {
             console.log("n4d error:\n",what);
             msg.type=Kirigami.MessageType.Error;
             msg.text=i18nd("lliurex-homework-harvester","Error sending files: %1",code);
@@ -135,11 +135,12 @@ QQC2.Pane {
     FileDialog {
         id: fileDialog
         title: i18nd("lliurex-homework-harvester","Select files");
-        folder: shortcuts.home
+        currentFolder: StandardPaths.standardLocations(StandardPaths.DocumentsLocation)[0]
+
         onAccepted: {
-            console.log("You chose: " + fileDialog.fileUrls)
-            for (var n=0;n<fileDialog.fileUrls.length;n++) {
-                var tmpFile=fileDialog.fileUrls[n].toString();
+            console.log("You chose: " + fileDialog.selectedFiles)
+            for (var n=0;n<fileDialog.selectedFiles.length;n++) {
+                var tmpFile=fileDialog.selectedFiles[n].toString();
                 tmpFile=tmpFile.replace(/^(file:\/{2})/,"");
                 var newFile=decodeURIComponent(tmpFile);
                 insertFile(newFile);
@@ -180,8 +181,8 @@ QQC2.Pane {
             model:modelFiles
             highlightFollowsCurrentItem: true
             
-            delegate: Kirigami.BasicListItem {
-                label: model.name
+            delegate: Text {
+                text:model.name
             }
         }
         
@@ -219,8 +220,8 @@ QQC2.Pane {
             model:modelTeachers
             highlightFollowsCurrentItem: true
             
-            delegate: Kirigami.BasicListItem {
-                label: model.name
+            delegate: Text {
+                text:model.name
             }
         }
         

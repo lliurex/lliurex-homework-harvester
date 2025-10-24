@@ -25,7 +25,7 @@ import Edupals.N4D 1.0 as N4D
 
 import org.kde.plasma.core  as PlasmaCore
 import org.kde.kirigami as Kirigami
-import org.kde.kcoreaddons as KCoreAddons
+import org.kde.coreaddons as KCoreAddons
 
 import QtQuick
 import QtQuick.Controls as QQC2
@@ -76,7 +76,7 @@ QQC2.Pane {
                     stack.push(mainView);
                 }
                 
-                onError: {
+                onError:(what,code)=> {
                     console.log("n4d error:\n",what);
                     
                     if (code==N4D.Error.AuthenticationFailed) {
@@ -191,14 +191,14 @@ QQC2.Pane {
                 plugin:"TeacherShareManager"
                 method:"get_paths"
                 
-                onResponse: {
+                onResponse:(value)=> {
                     console.log("paths:");
                     for (var key in value) {
                         console.log(key,":",value[key]);
                     }
                 }
                 
-                onError: {
+                onError:(what)=> {
                     console.log("n4d error:\n",what);
                 }
             }
@@ -209,7 +209,7 @@ QQC2.Pane {
                 plugin:"TeacherShareManager"
                 method:"is_configured"
                 
-                onResponse: {
+                onResponse:(value)=> {
                     console.log("is configured:",value);
                     
                     if (value) {
@@ -221,7 +221,7 @@ QQC2.Pane {
                     
                 }
                 
-                onError: {
+                onError:(what,code)=> {
                     console.log("n4d error:\n",what);
                     errorLabel.text=i18nd("lliurex-homework-harvester","Error checking share status: %1",code);
                     errorLabel.visible=true;
@@ -234,7 +234,7 @@ QQC2.Pane {
                 plugin:"TeacherShareManager"
                 method:"add_path"
                 
-                onResponse: {
+                onResponse:(value)=> {
                     console.log("added:\n",value);
                     
                     errorLabel.type=Kirigami.MessageType.Positive;
@@ -243,7 +243,7 @@ QQC2.Pane {
                     
                 }
                 
-                onError: {
+                onError:(what,code)=> {
                     console.log("n4d error:\n",what);
                     errorLabel.text=i18nd("lliurex-homework-harvester","Unable to add share: %1",code);
                     errorLabel.visible=true;
@@ -256,14 +256,14 @@ QQC2.Pane {
                 plugin:"TeacherShareManager"
                 method:"remove_path"
                 
-                onResponse: {
+                onResponse:(value)=> {
                     console.log("removed:\n",value);
                     errorLabel.type=Kirigami.MessageType.Positive;
                     errorLabel.text=i18nd("lliurex-homework-harvester","Shared directory removed");
                     errorLabel.visible=true;
                 }
                 
-                onError: {
+                onError:(what)=> {
                     console.log("n4d error:\n",what);
                     errorLabel.text=i18nd("lliurex-homework-harvester","Unable to remove share: %1");
                     errorLabel.visible=true;
@@ -280,7 +280,7 @@ QQC2.Pane {
                     console.log("share registered");
                 }
                 
-                onError: {
+                onError:(what,code)=> {
                     console.log("n4d error:\n",what);
                     errorLabel.type=Kirigami.MessageType.Error;
                     errorLabel.text=i18nd("lliurex-homework-harvester","Unable to register share: %1",code);
