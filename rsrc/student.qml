@@ -114,7 +114,7 @@ QQC2.Pane {
             }
         }
         
-        onError:(what,code) {
+        onError:(what,code)=> {
             console.log("n4d error:\n",what);
             msg.type=Kirigami.MessageType.Error;
             msg.text=i18nd("lliurex-homework-harvester","Error sending files: %1",code);
