@@ -25,6 +25,7 @@ import Edupals.N4D 1.0 as N4D
 
 import org.kde.plasma.core  as PlasmaCore
 import org.kde.kirigami  as Kirigami
+import org.kde.plasma.components as Components
 
 import QtQuick 
 import QtQuick.Controls as QQC2
@@ -179,10 +180,43 @@ QQC2.Pane {
             Layout.preferredHeight: 300
             
             model:modelFiles
-            highlightFollowsCurrentItem: true
-            
-            delegate: Text {
-                text:model.name
+            property int selectedItemIndex:-1
+
+            delegate: Components.ItemDelegate {
+                width:listFiles.width-10
+                height:30
+                highlighted:ListView.isCurrentItem
+                hoverEnabled:true
+                onClicked:{
+                    listFiles.selectedItemIndex=index
+                    listFiles.currentIndex=index
+                }
+                background:Rectangle{
+                    color:{
+                        if (index===listFiles.selectedItemIndex){
+                            return "#1e90ff"
+                        }else if (parent.hovered){
+                            return "#add8e6"
+                        }else if (parent.highlighted){
+                            return "#add8e6"
+                        }else{
+                            return "transparent"
+                        }
+                    }
+                }
+                Row{
+                    anchors.fill:parent
+                    anchors.leftMargin:5
+                    Text{
+                        text:model.name
+                        anchors.verticalCenter:parent.verticalCenter
+                    }
+                }
+            }
+            onCurrentIndexChanged:{
+                if (listFiles.focus){
+                    listFiles.selectedItemIndex=currentIndex
+                }
             }
         }
         
@@ -218,10 +252,43 @@ QQC2.Pane {
             Layout.preferredHeight: 100
             
             model:modelTeachers
-            highlightFollowsCurrentItem: true
-            
-            delegate: Text {
-                text:model.name
+            property int selectedItemIndex:-1
+
+            delegate: Components.ItemDelegate {
+                width:listTeachers.width-10
+                height:30
+                highlighted:ListView.isCurrentItem
+                hoverEnabled:true
+                onClicked:{
+                    listTeachers.selectedItemIndex=index
+                    listTeachers.currentIndex=index
+                }
+                background:Rectangle{
+                    color:{
+                        if (index===listTeachers.selectedItemIndex){
+                            return "#1e90ff"
+                        }else if (parent.hovered){
+                            return "#add8e6"
+                        }else if (parent.highlighted){
+                            return "#add8e6"
+                        }else{
+                            return "transparent"
+                        }
+                    }
+                }
+                Row{
+                    anchors.fill:parent
+                    anchors.leftMargin:5
+                    Text{
+                        text:model.name
+                        anchors.verticalCenter:parent.verticalCenter
+                    }
+                }
+            }
+            onCurrentIndexChanged:{
+                if (listTeachers.focus){
+                    listTeachers.selectedItemIndex=currentIndex
+                }
             }
         }
         
