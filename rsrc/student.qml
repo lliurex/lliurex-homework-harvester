@@ -192,13 +192,23 @@ QQC2.Pane {
                     listFiles.currentIndex=index
                 }
                 background:Rectangle{
+                    height:26
+                    radius:5.0
+                    anchors.verticalCenter:parent.verticalCenter
+                    border.color:{
+                        if (parent.hovered || parent.highlighted){
+                            return "#3daee9"
+                        }else{
+                            return "transparent"
+                        }
+                    }
                     color:{
                         if (index===listFiles.selectedItemIndex){
-                            return "#1e90ff"
+                            return "#3daee9"
                         }else if (parent.hovered){
-                            return "#add8e6"
+                            return "#c4e6f8"
                         }else if (parent.highlighted){
-                            return "#add8e6"
+                            return "#c4e6f8"
                         }else{
                             return "transparent"
                         }
@@ -210,6 +220,13 @@ QQC2.Pane {
                     Text{
                         text:model.name
                         anchors.verticalCenter:parent.verticalCenter
+                        color:{
+                            if (index===listFiles.selectedItemIndex){
+                                return "#ffffff"
+                            }else{
+                                return "#000000"
+                            }
+                        }
                     }
                 }
             }
@@ -264,13 +281,23 @@ QQC2.Pane {
                     listTeachers.currentIndex=index
                 }
                 background:Rectangle{
+                    height:26
+                    radius:5.0
+                    anchors.verticalCenter:parent.verticalCenter
+                    border.color:{
+                        if (parent.hovered || parent.highlighted){
+                            return "#3daee9"
+                        }else{
+                            return "transparent"
+                        }
+                    }
                     color:{
                         if (index===listTeachers.selectedItemIndex){
-                            return "#1e90ff"
+                            return "#3daee9"
                         }else if (parent.hovered){
-                            return "#add8e6"
+                            return "#c4e6f8"
                         }else if (parent.highlighted){
-                            return "#add8e6"
+                            return "#c4e6f8"
                         }else{
                             return "transparent"
                         }
@@ -282,6 +309,13 @@ QQC2.Pane {
                     Text{
                         text:model.name
                         anchors.verticalCenter:parent.verticalCenter
+                        color:{
+                            if (index===listFiles.selectedItemIndex){
+                                return "#ffffff"
+                            }else{
+                                return "#000000"
+                            }
+                        }
                     }
                 }
             }
