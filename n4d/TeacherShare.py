@@ -116,6 +116,10 @@ class TeacherShare:
 				try:
 					fileName=os.path.basename(src)
 					dest=self.shared_path+"/["+from_user+"]_"+fileName
+					ret=server.validate_user(self.credentials[0],self.credentials[1])
+					if ret["status"]!=0:
+						e=Exception(ret["msg"])
+						raise e
 					ret=server.get_file(self.credentials,"ScpManager",from_user,self.credentials[0],self.credentials[1],from_ip,src,dest)
 					if ret["status"]==0:
 						os.chown(dest,teacher_uid,teacher_gid)
