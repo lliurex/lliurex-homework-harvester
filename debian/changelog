@@ -1,3 +1,9 @@
+lliurex-homework-harvester (1.0.2.1.30) noble; urgency=medium
+
+  * Add support to gvagate users 
+
+ -- Raul Rodrigo Segura <raurodse@gmail.com>  Tue, 04 Nov 2025 16:06:28 +0100
+
 lliurex-homework-harvester (1.0.2.1.29) noble-testing; urgency=medium
 
   * testing version
