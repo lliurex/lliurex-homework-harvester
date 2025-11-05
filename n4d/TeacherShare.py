@@ -116,7 +116,8 @@ class TeacherShare:
 				try:
 					fileName=os.path.basename(src)
 					dest=self.shared_path+"/["+from_user+"]_"+fileName
-					ret=server.validate_user(self.credentials[0],self.credentials[1])
+					remote=xmlrpc.client.ServerProxy("https://{}:9779".format(from_ip),context=context)
+					ret=remote.validate_user(self.credentials[0],self.credentials[1])
 					if ret["status"]!=0:
 						e=Exception(ret["msg"])
 						raise e
