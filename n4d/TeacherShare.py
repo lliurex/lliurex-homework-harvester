@@ -131,7 +131,8 @@ class TeacherShare:
 				except Exception as e:
 					return n4d.responses.build_failed_call_response(TeacherShare.GRAB_FILE_ERROR,str(e))
 		else:
-			return n4d.responses.build_failed_call_response(TeacherShare.CREDENTIALS_ERROR,str(e))
+			error="No credentials avaliables"
+			return n4d.responses.build_failed_call_response(TeacherShare.CREDENTIALS_ERROR,error)
 			
 	#def grab_file
 

@@ -23,14 +23,15 @@
 
 import Edupals.N4D 1.0 as N4D
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.kirigami 2.16 as Kirigami
+import org.kde.plasma.core  as PlasmaCore
+import org.kde.kirigami  as Kirigami
+import org.kde.plasma.components as Components
 
-import QtQuick 2.6
-import QtQuick.Controls 2.6 as QQC2
-import QtQuick.Layouts 1.15
-import QtQuick.Dialogs 1.0
-import QtQml.Models 2.1
+import QtQuick 
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts 
+import QtQuick.Dialogs 
+import QtQml.Models
 
 QQC2.Pane {
     id: mainPane
@@ -75,14 +76,14 @@ QQC2.Pane {
         plugin: "TeacherShareManager"
         method:"get_paths"
         
-        onResponse: {
+        onResponse:(value)=> {
             for (var key in value) {
                 console.log(key,":",value[key]);
                 modelTeachers.append({"name":key});
             }
         }
         
-        onError: {
+        onError:(what,code)=> {
             console.log("n4d error:\n",what);
             msg.type=Kirigami.MessageType.Error;
             msg.text=i18nd("lliurex-homework-harvester","Unable to list shares: %1",code);
@@ -114,7 +115,7 @@ QQC2.Pane {
             }
         }
         
-        onError: {
+        onError:(what,code)=> {
             console.log("n4d error:\n",what);
             msg.type=Kirigami.MessageType.Error;
             msg.text=i18nd("lliurex-homework-harvester","Error sending files: %1",code);
@@ -135,11 +136,12 @@ QQC2.Pane {
     FileDialog {
         id: fileDialog
         title: i18nd("lliurex-homework-harvester","Select files");
-        folder: shortcuts.home
+        currentFolder: StandardPaths.standardLocations(StandardPaths.DocumentsLocation)[0]
+
         onAccepted: {
-            console.log("You chose: " + fileDialog.fileUrls)
-            for (var n=0;n<fileDialog.fileUrls.length;n++) {
-                var tmpFile=fileDialog.fileUrls[n].toString();
+            console.log("You chose: " + fileDialog.selectedFiles)
+            for (var n=0;n<fileDialog.selectedFiles.length;n++) {
+                var tmpFile=fileDialog.selectedFiles[n].toString();
                 tmpFile=tmpFile.replace(/^(file:\/{2})/,"");
                 var newFile=decodeURIComponent(tmpFile);
                 insertFile(newFile);
@@ -178,10 +180,60 @@ QQC2.Pane {
             Layout.preferredHeight: 300
             
             model:modelFiles
-            highlightFollowsCurrentItem: true
-            
-            delegate: Kirigami.BasicListItem {
-                label: model.name
+            property int selectedItemIndex:-1
+
+            delegate: Components.ItemDelegate {
+                width:listFiles.width-10
+                height:30
+                highlighted:ListView.isCurrentItem
+                hoverEnabled:true
+                onClicked:{
+                    listFiles.selectedItemIndex=index
+                    listFiles.currentIndex=index
+                }
+                background:Rectangle{
+                    height:26
+                    radius:5.0
+                    anchors.verticalCenter:parent.verticalCenter
+                    border.color:{
+                        if (parent.hovered || parent.highlighted){
+                            return "#3daee9"
+                        }else{
+                            return "transparent"
+                        }
+                    }
+                    color:{
+                        if (index===listFiles.selectedItemIndex){
+                            return "#3daee9"
+                        }else if (parent.hovered){
+                            return "#c4e6f8"
+                        }else if (parent.highlighted){
+                            return "#c4e6f8"
+                        }else{
+                            return "transparent"
+                        }
+                    }
+                }
+                Row{
+                    anchors.fill:parent
+                    anchors.leftMargin:5
+                    Text{
+                        text:model.name
+                        anchors.verticalCenter:parent.verticalCenter
+                        color:{
+                            if (index===listFiles.selectedItemIndex){
+                                return "#ffffff"
+                            }else{
+                                return "#000000"
+                            }
+                        }
+                    }
+                }
+            }
+            onCurrentIndexChanged:{
+                if (listFiles.focus){
+                    listFiles.selectedItemIndex=currentIndex
+                }
             }
         }
         
@@ -217,10 +269,60 @@ QQC2.Pane {
             Layout.preferredHeight: 100
             
             model:modelTeachers
-            highlightFollowsCurrentItem: true
-            
-            delegate: Kirigami.BasicListItem {
-                label: model.name
+            property int selectedItemIndex:-1
+
+            delegate: Components.ItemDelegate {
+                width:listTeachers.width-10
+                height:30
+                highlighted:ListView.isCurrentItem
+                hoverEnabled:true
+                onClicked:{
+                    listTeachers.selectedItemIndex=index
+                    listTeachers.currentIndex=index
+                }
+                background:Rectangle{
+                    height:26
+                    radius:5.0
+                    anchors.verticalCenter:parent.verticalCenter
+                    border.color:{
+                        if (parent.hovered || parent.highlighted){
+                            return "#3daee9"
+                        }else{
+                            return "transparent"
+                        }
+                    }
+                    color:{
+                        if (index===listTeachers.selectedItemIndex){
+                            return "#3daee9"
+                        }else if (parent.hovered){
+                            return "#c4e6f8"
+                        }else if (parent.highlighted){
+                            return "#c4e6f8"
+                        }else{
+                            return "transparent"
+                        }
+                    }
+                }
+                Row{
+                    anchors.fill:parent
+                    anchors.leftMargin:5
+                    Text{
+                        text:model.name
+                        anchors.verticalCenter:parent.verticalCenter
+                        color:{
+                            if (index===listFiles.selectedItemIndex){
+                                return "#ffffff"
+                            }else{
+                                return "#000000"
+                            }
+                        }
+                    }
+                }
+            }
+            onCurrentIndexChanged:{
+                if (listTeachers.focus){
+                    listTeachers.selectedItemIndex=currentIndex
+                }
             }
         }
         
