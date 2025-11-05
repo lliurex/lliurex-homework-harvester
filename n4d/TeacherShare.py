@@ -116,6 +116,11 @@ class TeacherShare:
 				try:
 					fileName=os.path.basename(src)
 					dest=self.shared_path+"/["+from_user+"]_"+fileName
+					remote=xmlrpc.client.ServerProxy("https://{}:9779".format(from_ip),context=context)
+					ret=remote.validate_user(self.credentials[0],self.credentials[1])
+					if ret["status"]!=0:
+						e=Exception(ret["msg"])
+						raise e
 					ret=server.get_file(self.credentials,"ScpManager",from_user,self.credentials[0],self.credentials[1],from_ip,src,dest)
 					if ret["status"]==0:
 						os.chown(dest,teacher_uid,teacher_gid)
@@ -126,7 +131,8 @@ class TeacherShare:
 				except Exception as e:
 					return n4d.responses.build_failed_call_response(TeacherShare.GRAB_FILE_ERROR,str(e))
 		else:
-			return n4d.responses.build_failed_call_response(TeacherShare.CREDENTIALS_ERROR,str(e))
+			error="No credentials avaliables"
+			return n4d.responses.build_failed_call_response(TeacherShare.CREDENTIALS_ERROR,error)
 			
 	#def grab_file
 
