@@ -1,3 +1,33 @@
+lliurex-homework-harvester (1.1) noble; urgency=medium
+
+  * first noble stable version 
+
+ -- Raul Rodrigo Segura <raurodse@gmail.com>  Wed, 05 Nov 2025 14:19:12 +0100
+
+lliurex-homework-harvester (1.0.2.1.31) noble; urgency=medium
+
+  * Validate on correct client
+
+ -- Raul Rodrigo Segura <raurodse@gmail.com>  Wed, 05 Nov 2025 11:47:30 +0100
+
+lliurex-homework-harvester (1.0.2.1.30) noble; urgency=medium
+
+  * Add support to gvagate users 
+
+ -- Raul Rodrigo Segura <raurodse@gmail.com>  Tue, 04 Nov 2025 16:06:28 +0100
+
+lliurex-homework-harvester (1.0.2.1.29) noble-testing; urgency=medium
+
+  * testing version
+
+ -- Raul Rodrigo Segura <raurodse@gmail.com>  Fri, 31 Oct 2025 13:19:11 +0100
+
+lliurex-homework-harvester (1.0.2.1.28) noble-testing; urgency=medium
+
+  * Migrated to qml6
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 24 Oct 2025 13:00:57 +0200
+
 lliurex-homework-harvester (1.0.2.1.25) noble; urgency=medium
 
   * First noble release 
